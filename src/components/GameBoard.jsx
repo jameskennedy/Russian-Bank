@@ -1,6 +1,4 @@
-import PropTypes from 'prop-types';
 import React from 'react';
-import 'react-notifications/lib/notifications.css';
 
 class GameBoard extends React.Component {
   constructor(props) {
@@ -10,17 +8,17 @@ class GameBoard extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="game-board">
         Game on!
       </div>);
   }
 }
 
 
-ConnectorProfile.propTypes = {
+GameBoard.propTypes = {
 };
 
-ConnectorProfile.defaultProps = {
+GameBoard.defaultProps = {
 };
 
 export default GameBoard;

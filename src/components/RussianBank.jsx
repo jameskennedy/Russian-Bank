@@ -1,5 +1,5 @@
 import React from 'react';
-import 'react-notifications/lib/notifications.css';
+import GameBoardContainer from '../containers/GameBoardContainer';
 
 class RussianBank extends React.Component {
   constructor(props) {
@@ -11,7 +11,8 @@ class RussianBank extends React.Component {
   render() {
     return (
       <div>
-        <button name="start">Start Game</button>
+        <div name="start">Header</div>
+        <GameBoardContainer />
 
       </div>);
   }
