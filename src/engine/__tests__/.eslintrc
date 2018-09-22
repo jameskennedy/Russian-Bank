@@ -1,0 +1,17 @@
+{
+  "plugins": ["jest"],
+  "extends": ["airbnb"],
+  "env": {
+    "jest/globals": true
+  },
+  "rules": {
+    "comma-dangle":"off",
+    "jest/no-disabled-tests": "warn",
+    "jest/no-focused-tests": "error",
+    "jest/no-identical-title": "error",
+    "jest/valid-expect": "error",
+
+    // disabled so that helper functions in test classes can go below tests
+    "no-use-before-define": ["error", { "functions": false, "classes": true }]
+  }
+}

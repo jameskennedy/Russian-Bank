@@ -1,0 +1,40 @@
+.card {
+    background-color: white;
+    width: 90px;
+    height: 150px;
+    border: 1px solid black;
+    padding: 3px;
+    border-radius: 7px;
+
+    .bottom-value {
+        position: absolute;
+        bottom: 3px;
+        right: 3px;
+        filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+        /* IE6,IE7 */
+        ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2)";
+        /* IE8 */
+        -moz-transform: rotate(-180deg);
+        /* FF3.5+ */
+        -o-transform: rotate(-180deg);
+        /* Opera 10.5 */
+        -webkit-transform: rotate(-180deg);
+        /* Safari 3.1+, Chrome */
+    }
+}
+
+.card.face-down {
+    background: url(#{'../images/card-back-1.jpeg'});
+    background-size: 100px 156px;
+    background-position: -6px -4px;
+}
+
+.card.Heart,
+.card.Diamond {
+    color: red;
+}
+
+.card.Club,
+.card.Spade {
+    color: black;
+}
