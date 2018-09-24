@@ -1,43 +1,41 @@
 import React from 'react';
-import Card from '../engine/Card';
-import Deck from '../engine/Deck';
-import CardComponent from './CardComponent';
+import PropTypes from 'prop-types';
+import GameState from '../engine/objects/GameState';
 import DeckComponent from './DeckComponent';
 
 class GameBoard extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
+  renderGameInactive() {
+    return (<p>Game not started</p>);
   }
 
   render() {
-    const cards = [];
-    for (let i = 0; i < 1; i += 1) {
-      cards.push(new Card((i % 13) + 1, Card.SUITS.HEARTS, true));
+    const gameState = this.props.gameState;
+    const isGameActive = !!gameState;
+    if (!isGameActive) {
+      return this.renderGameInactive();
     }
-    const deck1 = new Deck('deck', Deck.DeckMode.FACE_UP, cards);
-    const emptyDeck = new Deck('deck', Deck.DeckMode.FACE_UP);
+
+    let indent = 0;
+    const decks = gameState.decks;
+    const deckComponents = decks.map((deck) => {
+      indent += 200;
+      return (<DeckComponent key={indent} deck={deck} left={indent} top={150} />);
+    });
 
     return (
       <div className="game-board">
-        <CardComponent card={new Card(1, Card.SUITS.HEARTS, false)} left={0} top={0} />
-        <CardComponent card={new Card(2, Card.SUITS.CLUBS, true)} left={100} top={20} />
-        <CardComponent card={new Card(11, Card.SUITS.DIAMONDS, true)} left={200} top={40} />
-        <CardComponent card={new Card(13, Card.SUITS.SPADES, true)} left={300} top={60} />
-
-        <CardComponent card={new Card(12, Card.SUITS.SPADES, true)} left={250} top={50} />
-
-        <DeckComponent deck={deck1} left={250} top={150} />
-        <DeckComponent deck={emptyDeck} left={350} top={150} />
+        {deckComponents}
       </div>);
   }
 }
 
 
 GameBoard.propTypes = {
+  gameState: PropTypes.instanceOf(GameState)
 };
 
 GameBoard.defaultProps = {
+  gameState: null
 };
 
 export default GameBoard;

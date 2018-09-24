@@ -3,6 +3,7 @@ import CardSuit from './CardSuit';
 
 const RANK_MAP = {
   1: 'A',
+  10: '➉',
   11: 'J',
   12: 'Q',
   13: 'K'
@@ -27,6 +28,10 @@ class Card {
     this.faceUp = faceUp;
   }
 
+  isFaceUp() {
+    return this.faceUp;
+  }
+
   getRank() {
     return this.rank;
   }
@@ -43,9 +48,6 @@ class Card {
     return this.suit;
   }
 
-  isFaceUp() {
-    return this.faceUp;
-  }
 
   toString() {
     return `${this.getRankChar()} ${this.suit.toString()}`;

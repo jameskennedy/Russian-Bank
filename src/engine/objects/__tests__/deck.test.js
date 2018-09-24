@@ -23,6 +23,6 @@ describe('Deck', () => {
   });
 
   test('has string representation', () => {
-    expect(new Deck('discard', Deck.DeckMode.FACE_DOWN).toString()).toEqual('discard Deck');
+    expect(new Deck('discard', Deck.DeckMode.FACE_DOWN).toString()).toEqual('discard deck');
   });
 });

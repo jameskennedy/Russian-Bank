@@ -1,7 +1,7 @@
 export const SET_BUSY = 'SET_BUSY';
 export const START_GAME = 'START_GAME';
 
-export function selectView(gameSetupParams) {
+export function startGame(gameSetupParams) {
   return { type: START_GAME, gameSetupParams };
 }
 

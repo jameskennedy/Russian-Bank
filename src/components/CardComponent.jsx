@@ -1,17 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Card from '../engine/Card';
+import Card from '../engine/objects/Card';
 
 class CardComponent extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { value: props.card, left: props.left, top: props.top };
-  }
   renderCardValue() {
     return (
       <div>
-        <span>{this.state.value.toString()}</span>
-        <span className="bottom-value">{this.state.value.toString()}</span>
+        <span>{this.props.card.toString()}</span>
+        <span className="bottom-value">{this.props.card.toString()}</span>
       </div>
     );
   }
@@ -19,12 +15,12 @@ class CardComponent extends React.Component {
   render() {
     const styles = {
       position: 'absolute',
-      left: this.state.left,
-      top: this.state.top
+      left: this.props.left,
+      top: this.props.top
     };
-    const faceUp = this.state.value.isFaceUp();
+    const faceUp = this.props.card.isFaceUp();
     return (
-      <div className={`card ${this.state.value.getSuit().getName()} ${faceUp ? 'face-up' : 'face-down'}`} style={styles}>
+      <div className={`card ${this.props.card.getSuit().getName()} ${faceUp ? 'face-up' : 'face-down'}`} style={styles}>
         {faceUp && this.renderCardValue()}
       </div>);
   }

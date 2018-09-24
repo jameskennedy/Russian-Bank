@@ -1,40 +1,49 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import assert from 'assert-js';
-import Deck from '../engine/Deck';
+import Deck from '../engine/objects/Deck';
 import CardComponent from './CardComponent';
 
 class DeckComponent extends React.Component {
-  constructor(props) {
-    super(props);
-    assert.instanceOf(props.deck, Deck);
-    this.state = { value: props.deck, left: props.left, top: props.top };
+  createFannedCardComponents(cards) {
+    const components = [];
+    let voffset = 0;
+    for (let i = 0; i < cards.length; i += 1) {
+      voffset += (i > cards.length / 2 ? 1 : -1)
+        * Math.abs((cards.length / 2) - i) * (20 / cards.length);
+      components.push(<CardComponent key={i} card={cards[i]} left={i * 30} top={voffset} />);
+    }
+    return components;
   }
-  renderCardValue() {
-    return (
-      <div>
-        <span>{this.state.value.toString()}</span>
-        <span className="bottom-value">{this.state.value.toString()}</span>
-      </div>
-    );
+
+  createStackedCardComponents(cards) {
+    const topCards = Math.min(cards.length, 10);
+    const cardsToRender = cards.slice(cards.length - topCards, cards.length);
+    const components = [];
+    for (let i = 0; i < cardsToRender.length; i += 1) {
+      components.push(<CardComponent key={i} card={cardsToRender[i]} left={i} top={i + 200} />);
+    }
+    return components;
   }
 
   render() {
+    console.debug('render deck');
     const styles = {
       position: 'absolute',
-      left: this.state.left,
-      top: this.state.top
+      left: this.props.left,
+      top: this.props.top
     };
-    const rows = [];
-    const cards = this.state.value.getCards();
-    const topCards = Math.min(cards.length, 10);
-    for (let i = 0; i < topCards; i += 1) {
-      const index = (cards.length - topCards) + i;
-      rows.push(<CardComponent key={i} card={cards[index]} left={i} top={i} />);
+    const deck = this.props.deck;
+    const cards = deck.getCards();
+    let cardComponents = [];
+    if (deck.getMode() === Deck.DeckMode.FAN_UP) {
+      cardComponents = this.createFannedCardComponents(cards);
+    } else {
+      cardComponents = this.createStackedCardComponents(cards);
     }
+
     return (
       <div className={`deck ${cards.length <= 0 ? 'empty' : ''}`} style={styles}>
-        {rows}
+        {cardComponents}
       </div>);
   }
 }

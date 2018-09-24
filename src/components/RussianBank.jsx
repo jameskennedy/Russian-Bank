@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import GameBoardContainer from '../containers/GameBoardContainer';
 
 class RussianBank extends React.Component {
@@ -11,7 +12,7 @@ class RussianBank extends React.Component {
   render() {
     return (
       <div>
-        <div name="start">Header</div>
+        <div name="start"><button onClick={() => this.props.newGame()}>New Game</button></div>
         <GameBoardContainer />
 
       </div>);
@@ -20,6 +21,7 @@ class RussianBank extends React.Component {
 
 
 RussianBank.propTypes = {
+  newGame: PropTypes.func.isRequired
 };
 
 RussianBank.defaultProps = {
