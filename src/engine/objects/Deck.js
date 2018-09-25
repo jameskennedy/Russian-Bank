@@ -24,6 +24,10 @@ class Deck {
     this.setDeckMode(mode);
   }
 
+  getName() {
+    return this.name;
+  }
+
   getCards() {
     return this.cards;
   }
@@ -42,6 +46,17 @@ class Deck {
     this.cards.forEach(card => card.setFaceUp(mode !== DeckMode.FACE_DOWN));
   }
 
+  pushCard(card) {
+    if (!this.acceptsNewCards()) {
+      throw new Error(`Illegal attempt to add card to ${this}`);
+    }
+    this.cards.push(card);
+  }
+
+  popCard(card) {
+    return this.cards.pop(card);
+  }
+
   shuffle() {
     for (let i = this.cards.length - 1; i > 0; i -= 1) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -49,6 +64,10 @@ class Deck {
       this.cards[i] = this.cards[j];
       this.cards[j] = temp;
     }
+  }
+
+  deepClone() {
+    return new Deck(this.name, this.mode, this.cards.map(c => c.deepClone()));
   }
 
   toString() {

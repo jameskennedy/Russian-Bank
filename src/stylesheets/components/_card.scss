@@ -1,8 +1,17 @@
 .deck.empty {
-    border: 2px dashed rgb(0, 51, 0);
+    box-shadow: 0px 0px 10px whitesmoke;
 }
 
-.card , .deck.empty {
+.deck.actionable {
+    cursor: grab;
+}
+
+.deck.actionable:hover .card {
+    box-shadow: 0px 0px 6px whitesmoke;
+}
+
+.card,
+.deck.empty {
     width: 90px;
     height: 150px;
     border-radius: 7px;

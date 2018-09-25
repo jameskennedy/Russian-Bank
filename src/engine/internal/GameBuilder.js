@@ -11,7 +11,7 @@ class GameBuilder {
     throw new Error('Failed to assign a unique game id');
   }
 
-  createStandardCardDeck() {
+  createStandardCardDeck(name) {
     const cards = [];
     for (let i = 1; i <= 13; i += 1) {
       cards.push(new Card(i, Card.SUITS.HEARTS));
@@ -19,9 +19,17 @@ class GameBuilder {
       cards.push(new Card(i, Card.SUITS.DIAMONDS));
       cards.push(new Card(i, Card.SUITS.CLUBS));
     }
-    const deck = new Deck('deck', Deck.DeckMode.FAN_UP, cards);
+    const deck = new Deck(name, Deck.DeckMode.FACE_DOWN, cards);
     deck.shuffle();
     return deck;
+  }
+
+  createDiscardDeck(name) {
+    return new Deck(name, Deck.DeckMode.FACE_UP, []);
+  }
+
+  createHandDeck(name) {
+    return new Deck(name, Deck.DeckMode.FAN_UP, []);
   }
 }
 

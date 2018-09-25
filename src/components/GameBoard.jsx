@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import GameState from '../engine/objects/GameState';
 import DeckComponent from './DeckComponent';
+import Action from '../engine/objects/actions/Action';
 
 class GameBoard extends React.Component {
   renderGameInactive() {
@@ -19,7 +20,10 @@ class GameBoard extends React.Component {
     const decks = gameState.decks;
     const deckComponents = decks.map((deck) => {
       indent += 200;
-      return (<DeckComponent key={indent} deck={deck} left={indent} top={150} />);
+      const actions = this.props.legalActions.filter(a => a.sourceDeckName === deck.getName());
+      return (
+        <DeckComponent key={indent} deck={deck} legalActions={actions} left={indent} top={150} />
+      );
     });
 
     return (
@@ -31,7 +35,8 @@ class GameBoard extends React.Component {
 
 
 GameBoard.propTypes = {
-  gameState: PropTypes.instanceOf(GameState)
+  gameState: PropTypes.instanceOf(GameState),
+  legalActions: PropTypes.arrayOf(Action).isRequired
 };
 
 GameBoard.defaultProps = {

@@ -48,6 +48,9 @@ class Card {
     return this.suit;
   }
 
+  deepClone() {
+    return new Card(this.rank, this.suit, this.faceUp);
+  }
 
   toString() {
     return `${this.getRankChar()} ${this.suit.toString()}`;

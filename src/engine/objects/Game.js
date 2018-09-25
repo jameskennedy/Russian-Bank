@@ -1,14 +1,16 @@
 import assert from 'assert-js';
-import { List } from 'immutable';
+import {
+  List
+} from 'immutable';
 import GameState from './GameState';
 
 class Game {
-  constructor(id, players, initialState, rules) {
-    assert.integer(id);
+  constructor(gameId, players, initialState, rules) {
+    assert.integer(gameId);
     assert.instanceOf(rules, List);
     assert.instanceOf(players, List);
     assert.instanceOf(initialState, GameState);
-    this.gameId = id;
+    this.gameId = gameId;
     this.players = players;
     this.rules = rules;
     this.gameHistory = [initialState];
@@ -17,6 +19,11 @@ class Game {
 
   getCurrentGameState() {
     return this.gameHistory[this.gameHistory.length - 1];
+  }
+
+  advanceState(newGameState) {
+    assert.instanceOf(newGameState, GameState);
+    this.gameHistory.push(newGameState);
   }
 }
 

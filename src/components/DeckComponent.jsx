@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Deck from '../engine/objects/Deck';
 import CardComponent from './CardComponent';
+import Action from '../engine/objects/actions/Action';
 
 class DeckComponent extends React.Component {
   createFannedCardComponents(cards) {
@@ -20,7 +21,7 @@ class DeckComponent extends React.Component {
     const cardsToRender = cards.slice(cards.length - topCards, cards.length);
     const components = [];
     for (let i = 0; i < cardsToRender.length; i += 1) {
-      components.push(<CardComponent key={i} card={cardsToRender[i]} left={i} top={i + 200} />);
+      components.push(<CardComponent key={i} card={cardsToRender[i]} left={i} top={i} />);
     }
     return components;
   }
@@ -41,8 +42,11 @@ class DeckComponent extends React.Component {
       cardComponents = this.createStackedCardComponents(cards);
     }
 
+    const emptyClass = cards.length <= 0 ? 'empty' : '';
+    const actionableClass = this.props.legalActions.length === 0 ? '' : 'actionable';
+
     return (
-      <div className={`deck ${cards.length <= 0 ? 'empty' : ''}`} style={styles}>
+      <div className={`deck ${emptyClass} ${actionableClass}`} style={styles}>
         {cardComponents}
       </div>);
   }
@@ -50,6 +54,7 @@ class DeckComponent extends React.Component {
 
 DeckComponent.propTypes = {
   deck: PropTypes.instanceOf(Deck).isRequired,
+  legalActions: PropTypes.arrayOf(Action).isRequired,
   left: PropTypes.number,
   top: PropTypes.number
 };
