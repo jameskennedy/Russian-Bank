@@ -1,103 +1,117 @@
 {
-  "name": "russian-bank",
+  "name": "my-app",
   "version": "0.1.0",
   "private": true,
-  "jest": {
-    "verbose": true,
-    "browser": true,
-    "testRegex": "((\\.|/)(test|spec))\\.jsx?$",
-    "moduleNameMapper": {
-      "^.+\\.s?css$": "identity-obj-proxy",
-      "\\.(jpg|jpeg|png|svg)$": "identity-obj-proxy"
-    },
-    "modulePathIgnorePatterns": [
-      "<rootDir>/target/"
-    ],
-    "testURL": "http://localhost:3000/"
-  },
   "dependencies": {
-    "@types/react": "^16.0.0",
+    "@types/react-redux": "^6.0.9",
     "assert-js": "^0.19.0",
-    "autoprefixer": "7.1.1",
-    "babel-core": "6.25.0",
-    "babel-eslint": "^7.2.3",
-    "babel-loader": "7.0.0",
-    "babel-preset-react-app": "^3.0.1",
-    "babel-runtime": "6.23.0",
-    "bootstrap": "^3.3.7",
+    "autoprefixer": "7.1.6",
+    "babel-jest": "^22.1.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-react-app": "^3.1.1",
     "case-sensitive-paths-webpack-plugin": "2.1.1",
     "chalk": "1.1.3",
-    "css-loader": "0.28.4",
+    "css-loader": "0.28.7",
     "dotenv": "4.0.0",
-    "es2015": "^0.0.0",
-    "extract-text-webpack-plugin": "2.1.2",
+    "dotenv-expand": "4.2.0",
+    "extract-text-webpack-plugin": "3.0.2",
     "file-loader": "0.11.2",
+    "fork-ts-checker-webpack-plugin": "^0.4.9",
     "fs-extra": "3.0.1",
     "html-webpack-plugin": "2.29.0",
     "immutable": "^3.8.2",
-    "jest": "^23.6.0",
-    "lodash": "^4.17.4",
-    "node-sass": "^4.5.3",
+    "jest": "22.4.2",
     "object-assign": "4.1.1",
-    "postcss-flexbugs-fixes": "3.0.0",
-    "postcss-loader": "2.0.6",
-    "promise": "7.1.1",
-    "prop-types": "^15.5.10",
-    "react": "^15.6.1",
-    "react-bootstrap": "^0.31.3",
-    "react-bootstrap-table": "^4.0.5",
-    "react-collapse": "^4.0.3",
-    "react-dom": "^15.6.1",
-    "react-dom-factories": "^1.0.1",
-    "react-error-overlay": "^1.0.9",
-    "react-google-signin": "^1.0.1",
-    "react-motion": "^0.5.0",
-    "react-notifications": "^1.4.3",
-    "react-redux": "^5.0.6",
-    "react-select": "^1.0.0-rc.10",
-    "react-spinkit": "^3.0.0",
-    "react-tabs-redux": "^1.6.0",
-    "redux": "^3.7.2",
-    "redux-logger": "^3.0.6",
-    "redux-orm": "^0.9.4",
-    "redux-thunk": "^2.2.0",
-    "sass-loader": "^6.0.6",
-    "serve": "^6.0.5",
-    "style-loader": "0.18.2",
-    "superagent": "^3.8.2",
-    "sw-precache-webpack-plugin": "0.11.3",
-    "url-loader": "0.5.9",
-    "url-search-params": "^0.10.0",
-    "webpack": "2.6.1",
-    "webpack-manifest-plugin": "1.1.0",
-    "whatwg-fetch": "2.0.3",
-    "yarn": "^0.27.5"
-  },
-  "devDependencies": {
-    "babel-jest": "^21.2.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-react": "^6.24.1",
-    "enzyme": "^2.9.1",
-    "eslint": "^4.3.0",
-    "eslint-config-airbnb": "^15.1.0",
-    "eslint-loader": "^1.9.0",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jest": "^21.2.0",
-    "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-react": "^7.1.0",
-    "identity-obj-proxy": "^3.0.0",
-    "react-dev-utils": "^3.0.2",
-    "react-test-renderer": "^15.6.1",
-    "redux-mock-store": "^1.2.3",
-    "webpack-dev-server": "2.5.0"
+    "postcss-flexbugs-fixes": "3.2.0",
+    "postcss-loader": "2.0.8",
+    "promise": "8.0.1",
+    "prop-types": "^15.6.2",
+    "raf": "3.4.0",
+    "react": "^16.5.2",
+    "react-dev-utils": "^5.0.1",
+    "react-dom": "^16.5.2",
+    "react-redux": "^5.0.7",
+    "redux": "^4.0.0",
+    "redux-thunk": "^2.3.0",
+    "resolve": "1.6.0",
+    "source-map-loader": "^0.2.1",
+    "style-loader": "0.19.0",
+    "sw-precache-webpack-plugin": "0.11.4",
+    "ts-loader": "^2.3.7",
+    "tsconfig-paths-webpack-plugin": "^2.0.0",
+    "tslint": "^5.7.0",
+    "tslint-config-prettier": "^1.10.0",
+    "tslint-react": "^3.2.0",
+    "uglifyjs-webpack-plugin": "^1.1.8",
+    "url-loader": "0.6.2",
+    "webpack": "3.8.1",
+    "webpack-dev-server": "2.9.4",
+    "webpack-manifest-plugin": "1.3.2",
+    "whatwg-fetch": "2.0.3"
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "lint": "node_modules/.bin/eslint --ext .js,.jsx src spec",
     "build": "node scripts/build.js",
-    "test": "jest"
+    "test": "node scripts/test.js --env=jsdom"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "devDependencies": {
+    "@types/jest": "^23.3.2",
+    "@types/node": "^10.11.1",
+    "@types/react": "^16.4.14",
+    "@types/react-dom": "^16.0.7",
+    "@types/react-redux": "^6.0.9",
+    "node-sass": "^4.9.3",
+    "sass-loader": "^7.1.0",
+    "ts-jest": "^23.10.2",
+    "typescript": "^3.0.3"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}"
+    ],
+    "setupFiles": [
+      "<rootDir>/config/polyfills.js"
+    ],
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.(j|t)s?(x)",
+      "<rootDir>/src/**/?(*.)(spec|test).(j|t)s?(x)"
+    ],
+    "testEnvironment": "node",
+    "testURL": "http://localhost",
+    "transform": {
+      "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest",
+      "^.+\\.tsx?$": "<rootDir>/config/jest/typescriptTransform.js",
+      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
+      "^(?!.*\\.(js|jsx|mjs|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+    },
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|ts|tsx)$"
+    ],
+    "moduleNameMapper": {
+      "^react-native$": "react-native-web"
+    },
+    "moduleFileExtensions": [
+      "web.ts",
+      "ts",
+      "web.tsx",
+      "tsx",
+      "web.js",
+      "js",
+      "web.jsx",
+      "jsx",
+      "json",
+      "node",
+      "mjs"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsConfigFile": "/Users/james.kennedy/Documents/my-app/tsconfig.test.json"
+      }
+    }
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
   }
 }

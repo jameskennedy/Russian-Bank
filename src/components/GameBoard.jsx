@@ -1,8 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import GameState from '../engine/objects/GameState';
 import DeckComponent from './DeckComponent';
-import Action from '../engine/objects/actions/Action';
 
 class GameBoard extends React.Component {
   renderGameInactive() {
@@ -32,15 +29,5 @@ class GameBoard extends React.Component {
       </div>);
   }
 }
-
-
-GameBoard.propTypes = {
-  gameState: PropTypes.instanceOf(GameState),
-  legalActions: PropTypes.arrayOf(Action).isRequired
-};
-
-GameBoard.defaultProps = {
-  gameState: null
-};
 
 export default GameBoard;

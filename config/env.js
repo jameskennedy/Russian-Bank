@@ -27,13 +27,16 @@ var dotenvFiles = [
 
 // Load environment variables from .env* files. Suppress warnings using silent
 // if this file is missing. dotenv will never modify any environment variables
-// that have already been set.
+// that have already been set.  Variable expansion is supported in .env files.
 // https://github.com/motdotla/dotenv
+// https://github.com/motdotla/dotenv-expand
 dotenvFiles.forEach(dotenvFile => {
   if (fs.existsSync(dotenvFile)) {
-    require('dotenv').config({
-      path: dotenvFile,
-    });
+    require('dotenv-expand')(
+      require('dotenv').config({
+        path: dotenvFile,
+      })
+    );
   }
 });
 
@@ -74,16 +77,17 @@ function getClientEnvironment(publicUrl) {
         // This should only be used as an escape hatch. Normally you would put
         // images into the `src` and `import` them in code to get their paths.
         PUBLIC_URL: publicUrl,
-
-        GOOGLE_API_CLIENT_ID: process.env.GOOGLE_API_CLIENT_ID
       }
     );
   // Stringify all values so we can feed into Webpack DefinePlugin
   const stringified = {
-    'process.env': Object.keys(raw).reduce((env, key) => {
-      env[key] = JSON.stringify(raw[key]);
-      return env;
-    }, {}),
+    'process.env': Object.keys(raw).reduce(
+      (env, key) => {
+        env[key] = JSON.stringify(raw[key]);
+        return env;
+      },
+      {}
+    ),
   };
 
   return { raw, stringified };

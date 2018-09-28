@@ -1,7 +1,6 @@
 import {
   connect
 } from 'react-redux';
-import assert from 'assert-js';
 import GameFactory from '../engine/GameFactory';
 import GameBoard from '../components/GameBoard';
 import GameState from '../engine/objects/GameState';
@@ -11,7 +10,6 @@ const mapStateToProps = (state) => {
   let legalActions = [];
   if (gameState) {
     legalActions = GameFactory.getGameService(gameState.getGameId()).getLegalActions(gameState);
-    assert.instanceOf(gameState, GameState);
   }
   return {
     gameState,

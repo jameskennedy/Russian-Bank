@@ -1,6 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import Card from '../engine/objects/Card';
 
 class CardComponent extends React.Component {
   renderCardValue() {
@@ -14,8 +12,8 @@ class CardComponent extends React.Component {
 
   render() {
     const styles = {
-      position: 'absolute',
       left: this.props.left,
+      position: 'absolute',
       top: this.props.top
     };
     const faceUp = this.props.card.isFaceUp();
@@ -25,16 +23,5 @@ class CardComponent extends React.Component {
       </div>);
   }
 }
-
-CardComponent.propTypes = {
-  card: PropTypes.instanceOf(Card).isRequired,
-  left: PropTypes.number,
-  top: PropTypes.number
-};
-
-CardComponent.defaultProps = {
-  left: 0,
-  top: 0
-};
 
 export default CardComponent;

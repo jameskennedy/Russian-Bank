@@ -25,8 +25,8 @@ RussianBank.propTypes = {
 };
 
 RussianBank.defaultProps = {
-  selectedTab: 'Features',
-  isBusy: false
+  isBusy: false,
+  selectedTab: 'Features'
 };
 
 export default RussianBank;

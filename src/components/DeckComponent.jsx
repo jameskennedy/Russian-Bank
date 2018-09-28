@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Deck from '../engine/objects/Deck';
 import CardComponent from './CardComponent';
 import Action from '../engine/objects/actions/Action';
@@ -27,10 +26,9 @@ class DeckComponent extends React.Component {
   }
 
   render() {
-    console.debug('render deck');
     const styles = {
-      position: 'absolute',
       left: this.props.left,
+      position: 'absolute',
       top: this.props.top
     };
     const deck = this.props.deck;
@@ -51,17 +49,5 @@ class DeckComponent extends React.Component {
       </div>);
   }
 }
-
-DeckComponent.propTypes = {
-  deck: PropTypes.instanceOf(Deck).isRequired,
-  legalActions: PropTypes.arrayOf(Action).isRequired,
-  left: PropTypes.number,
-  top: PropTypes.number
-};
-
-DeckComponent.defaultProps = {
-  left: 0,
-  top: 0
-};
 
 export default DeckComponent;

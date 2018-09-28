@@ -4,6 +4,7 @@
   ],
   "parser": "babel-eslint",
   "rules": {
+    "react/prop-types": "off",
     "comma-dangle": "off",
     "class-methods-use-this": "off",
     "no-alert": "off",
