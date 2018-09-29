@@ -1,4 +1,4 @@
-import assert from 'assert-js';
+
 import CardSuit from './CardSuit';
 
 const RANK_MAP = {
@@ -10,33 +10,25 @@ const RANK_MAP = {
 };
 
 class Card {
-  constructor(rank, suit, faceUp) {
-    assert.instanceOf(suit, CardSuit);
-    assert.integer(rank);
-    assert.greaterThanOrEqual(1, rank);
-    assert.lessThanOrEqual(13, rank);
-    if (faceUp) {
-      assert.boolean(faceUp);
+  constructor(private rank: number, private suit: CardSuit, private faceUp: boolean) {
+    if (rank < 1 || rank > 13) {
+      throw new Error(`Invalid card value ${rank}`);
     }
-    this.rank = rank;
-    this.suit = suit;
-    this.faceUp = !!faceUp;
   }
 
-  setFaceUp(faceUp) {
-    assert.boolean(faceUp);
+  public setFaceUp(faceUp: boolean) {
     this.faceUp = faceUp;
   }
 
-  isFaceUp() {
+  public isFaceUp() {
     return this.faceUp;
   }
 
-  getRank() {
+  public getRank() {
     return this.rank;
   }
 
-  getRankChar() {
+  public getRankChar() {
     const char = RANK_MAP[this.rank];
     if (char) {
       return char;
@@ -44,20 +36,17 @@ class Card {
     return this.rank.toString();
   }
 
-  getSuit() {
+  public getSuit() {
     return this.suit;
   }
 
-  deepClone() {
+  public createCopy() {
     return new Card(this.rank, this.suit, this.faceUp);
   }
 
-  toString() {
+  public toString() {
     return `${this.getRankChar()} ${this.suit.toString()}`;
   }
 }
-
-Card.SUITS = CardSuit;
-
 
 export default Card;
