@@ -24,6 +24,23 @@ class GameState {
     }
     return deck;
   }
+
+  public getDecksByStack(): Map<string, Deck> {
+    return this.decks.reduce((map, deck) => {
+      if (deck.getStackdOnDeck()) {
+        map.set(deck.getStackdOnDeck()!.getName(), deck);
+      }
+      return map;
+    }, new Map<string, Deck>());
+  }
+
+  public toString(): string {
+    let decks = '';
+    this.decks.forEach(deck => {
+      decks += `${deck.getName()}: ${deck.getCards()} \n`;
+    });
+    return `Game state ${this.getStateId()}:\n${decks}`;
+  }
 }
 
 export default GameState;

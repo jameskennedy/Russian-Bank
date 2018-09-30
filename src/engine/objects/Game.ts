@@ -1,9 +1,10 @@
+import Rule from '../rules/Rule'
 import GameState from "./GameState";
 
 class Game {
   private gameHistory: GameState[];
 
-  constructor(private gameId: number, initialState: GameState) {
+  constructor(private gameId: number, initialState: GameState, private rules: Rule[]) {
     this.gameHistory = [initialState];
   }
 
@@ -17,6 +18,10 @@ class Game {
 
   public advanceState(newGameState: GameState) {
     this.gameHistory.push(newGameState);
+  }
+
+  public getRules() {
+    return this.rules;
   }
 }
 

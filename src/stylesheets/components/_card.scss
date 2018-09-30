@@ -13,11 +13,11 @@
 .card,
 .deck.empty {
     border-radius: 7px;
+    width: 90px;
+    height: 150px;
 }
 
 .card {
-    width: 90px;
-    height: 150px;
     background-color: white;
     border: 1px solid black;
     padding: 3px;

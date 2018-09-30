@@ -9,15 +9,11 @@ export enum DeckMode {
 }
 
 export class Deck {
-  private acceptsNewCards: boolean = false;
-  constructor(private name: string, private mode: DeckMode, private cards: Card[]) {
-    if (cards) {
-      this.cards = [...cards];
-    } else {
-      this.cards = [];
-    }
+  private stackedOnDeck?: Deck;
+  constructor(private name: string, private mode: DeckMode, private cards: Card[], private acceptsNewCards?: boolean) {
     this.setDeckMode(mode);
   }
+
 
   public getName() {
     return this.name;
@@ -25,6 +21,14 @@ export class Deck {
 
   public getCards() {
     return this.cards;
+  }
+
+  public isEmpty(): boolean {
+    return this.cards.length === 0;
+  }
+
+  public isAcceptingNewCards(): boolean {
+    return Boolean(this.acceptsNewCards);
   }
 
   public getTopCard() {
@@ -37,7 +41,11 @@ export class Deck {
 
   public setDeckMode(mode: DeckMode) {
     this.mode = mode;
-    this.cards.forEach(card => card.setFaceUp(mode !== DeckMode.FACE_DOWN));
+    this.cards.forEach(card => card.setFaceUp(this.isFaceUp()));
+  }
+
+  public isFaceUp() {
+    return this.mode !== DeckMode.FACE_DOWN;
   }
 
   public pushCard(card: Card) {
@@ -45,6 +53,7 @@ export class Deck {
       throw new Error(`Illegal attempt to add card to ${this}`);
     }
     this.cards.push(card);
+    card.setFaceUp(this.isFaceUp())
   }
 
   public popCard() {
@@ -59,9 +68,16 @@ export class Deck {
       this.cards[j] = temp;
     }
   }
+  public getStackdOnDeck() {
+    return this.stackedOnDeck;
+  }
+
+  public setStackdOnDeck(stackedOnDeck?: Deck) {
+    this.stackedOnDeck = stackedOnDeck;
+  }
 
   public createCopy() {
-    return new Deck(this.name, this.mode, this.cards.map(c => c.createCopy()));
+    return new Deck(this.name, this.mode, this.cards.map(c => c.createCopy()), this.acceptsNewCards);
   }
 
   public toString() {

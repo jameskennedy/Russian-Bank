@@ -10,10 +10,14 @@ const RANK_MAP = {
 };
 
 class Card {
-  constructor(private rank: number, private suit: CardSuit, private faceUp: boolean) {
+  constructor(private rank: number, private suit: CardSuit, private faceUp: boolean = false) {
     if (rank < 1 || rank > 13) {
       throw new Error(`Invalid card value ${rank}`);
     }
+  }
+
+  public getName() {
+    return `${this.getRankChar()}${this.suit.toString()}`;
   }
 
   public setFaceUp(faceUp: boolean) {
@@ -45,7 +49,7 @@ class Card {
   }
 
   public toString() {
-    return `${this.getRankChar()} ${this.suit.toString()}`;
+    return this.getName();
   }
 }
 

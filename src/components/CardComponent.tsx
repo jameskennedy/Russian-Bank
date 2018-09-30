@@ -5,6 +5,7 @@ export interface ICardProps {
   left: number;
   top: number;
   card: Card;
+  selectCard: (card: Card) => void;
 }
 
 class CardComponent extends React.PureComponent<ICardProps> {
@@ -16,8 +17,11 @@ class CardComponent extends React.PureComponent<ICardProps> {
       top: this.props.top
     };
     const faceUp = this.props.card.isFaceUp();
+    const selectCard = () => this.props.selectCard(this.props.card);
     return (
-      <div className={`card ${this.props.card.getSuit().getName()} ${faceUp ? 'face-up' : 'face-down'}`} style={styles}>
+      <div className={`card ${this.props.card.getSuit().getName()} ${faceUp ? 'face-up' : 'face-down'}`}
+        style={styles}
+        onClick={selectCard}>
         {faceUp && this.renderCardValue()}
       </div>);
   }
@@ -31,7 +35,5 @@ class CardComponent extends React.PureComponent<ICardProps> {
     );
   }
 }
-
-
 
 export default CardComponent;

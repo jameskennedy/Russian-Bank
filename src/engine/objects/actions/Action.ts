@@ -1,12 +1,12 @@
 import GameState from "../GameState";
 
 export enum ActionType {
-  MOVE = 'move'
+  MOVE = 'move',
+  FLIP = 'flip'
 }
 
 export class Action {
-  protected sourceDeckName?: string;
-  constructor(private type: ActionType) {
+  constructor(protected type: ActionType, private sourceDeckName: string, private sourceCardName?: string) {
   }
 
   public execute(gameState: GameState) {
@@ -15,6 +15,10 @@ export class Action {
 
   public getSourceDeckName() {
     return this.sourceDeckName;
+  }
+
+  public getSourceCardName() {
+    return this.sourceCardName;
   }
 
   public getType(): ActionType {
