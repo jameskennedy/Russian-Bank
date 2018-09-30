@@ -1,5 +1,4 @@
 import Action from '../engine/objects/actions/Action';
-import GameStateBuilder from './internal/GameStateBuilder';
 import RuleEngine from './internal/RuleEngine';
 import FlipTopCard from './objects/actions/FlipTopCard';
 import Move from './objects/actions/Move';
@@ -9,13 +8,12 @@ import GameState from './objects/GameState';
 
 class GameService {
   private ruleEngine: RuleEngine = new RuleEngine(this.game);
-  private gameStateBuilder = new GameStateBuilder();
   constructor(private game: Game) {
   }
 
   public getCopyOfCurrentGameState() {
     const currentState = this.game.getCurrentGameState();
-    return this.gameStateBuilder.copyGameState(currentState);
+    return currentState.createCopy();
   }
 
   public getLegalActions(gameState: GameState = this.game.getCurrentGameState()): Action[] {

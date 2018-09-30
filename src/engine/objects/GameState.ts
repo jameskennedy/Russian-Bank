@@ -34,12 +34,37 @@ class GameState {
     }, new Map<string, Deck>());
   }
 
+  public createCopy(): GameState {
+    const id = this.getStateId() + 1;
+    const oldNewMap = this.getDecks().reduce((map, oldDeck) => {
+      map.set(oldDeck.getName(), oldDeck.createCopy());
+      return map;
+    }, new Map<string, Deck>());
+
+    const decks = Array.from(oldNewMap.values());
+    this.copyDeckReferences(oldNewMap);
+    return new GameState(this.gameId, id, decks);
+  }
+
   public toString(): string {
     let decks = '';
     this.decks.forEach(deck => {
       decks += `${deck.getName()}: ${deck.getCards()} \n`;
     });
     return `Game state ${this.getStateId()}:\n${decks}`;
+  }
+
+  private copyDeckReferences(oldNewMap: Map<string, Deck>) {
+    this.getDecks().forEach(deck => {
+      if (deck.getStackdOnDeck()) {
+        const oldFlipToDeck = deck.getStackdOnDeck()!;
+        const newDeck = oldNewMap.get(deck.getName());
+        if (newDeck) {
+          const newFlipToDeck = oldNewMap.get(oldFlipToDeck.getName());
+          newDeck.setStackdOnDeck(newFlipToDeck);
+        }
+      }
+    });
   }
 }
 

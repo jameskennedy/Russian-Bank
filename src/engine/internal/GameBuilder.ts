@@ -2,21 +2,17 @@ import Card from '../objects/Card';
 import CardSuit from '../objects/CardSuit';
 import { Deck, DeckMode } from '../objects/Deck';
 import Game from '../objects/Game';
+import GameState from '../objects/GameState';
 import CannotMoveIfNotFaceUp from '../rules/common/CannotMoveIfNotFaceUpRule';
+import MaxDeckSizeRule from '../rules/common/MaxDeckSizeRule';
 import NoActionOnCoveredDeck from '../rules/fundamental/NoActionOnCoveredDeckRule';
 import Rule from '../rules/Rule';
 
 class GameBuilder {
-  public newUniqueGameId(activeGames: Game[]) {
-    for (let newId = 0; newId < 1000; newId += 1) {
-      if (!activeGames.find(game => game.getGameId() === newId)) {
-        return newId;
-      }
-    }
-    throw new Error('Failed to assign a unique game id');
-  }
+  private decks: Deck[] = [];
+  private rules: Rule[] = this.createStandardRules();
 
-  public createStandardCardDeck(name: string) {
+  public addStandardCardDeck(name: string): GameBuilder {
     const cards = [];
     for (let i = 1; i <= 13; i += 1) {
       cards.push(new Card(i, CardSuit.HEARTS, false));
@@ -26,25 +22,44 @@ class GameBuilder {
     }
     const deck = new Deck(name, DeckMode.FACE_DOWN, cards);
     deck.shuffle();
-    return deck;
+    this.decks.push(deck);
+    return this;
   }
 
-  public createDiscardDeck(name: string) {
-    return new Deck(name, DeckMode.FACE_UP, [], true);
+  public addDiscardDeck(name: string): GameBuilder {
+    this.decks.push(new Deck(name, DeckMode.FACE_UP, [], true));
+    return this;
   }
 
-  public createHandDeck(name: string) {
-    return new Deck(name, DeckMode.FAN_UP, [], true);
+  public addHandDeck(name: string): GameBuilder {
+    this.decks.push(new Deck(name, DeckMode.FAN_UP, [], true));
+    return this;
   }
 
-  public createTopCardDeck(name: string, stackedOn: Deck): any {
+  public addTopCardDeck(name: string, stackedOnDeckName: string): GameBuilder {
     const deck = new Deck(name, DeckMode.FACE_UP, [], true);
-    deck.setStackdOnDeck(stackedOn);
-    return deck;
+    const bottomDeck = this.decks.find(d => d.getName() === stackedOnDeckName);
+    if (!bottomDeck) {
+      throw new Error(`Referenced unknown dek ${stackedOnDeckName}`);
+    }
+    deck.setStackdOnDeck(bottomDeck);
+    this.decks.push(deck);
+    this.addRule(new MaxDeckSizeRule(1, [name]))
+    return this;
+  }
+
+  public addRule(rule: Rule): GameBuilder {
+    this.rules.push(rule);
+    return this;
+  }
+
+  public create(gameId: number): Game {
+    const initialState = new GameState(gameId, 0, this.decks);
+    return new Game(initialState.getGameId(), initialState, [...this.rules]);
   }
 
 
-  public createStandardRules(): Rule[] {
+  private createStandardRules(): Rule[] {
     return [new CannotMoveIfNotFaceUp(), new NoActionOnCoveredDeck()];
   }
 }

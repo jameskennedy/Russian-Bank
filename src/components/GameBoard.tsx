@@ -12,8 +12,12 @@ interface IGameBoardProps {
 }
 
 const deckCoords = {
+  'Clubs': { left: 420, top: 20 },
+  'Diamonds': { left: 620, top: 20 },
+  'Hearts': { left: 220, top: 20 },
   'P1': { left: 400, top: 400 },
-  'P1 Discard': { left: 600, top: 400 }
+  'P1 Discard': { left: 600, top: 400 },
+  'Spades': { left: 20, top: 20 }
 }
 
 export class GameBoard extends React.PureComponent<IGameBoardProps>  {
