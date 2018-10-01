@@ -5,7 +5,9 @@ export interface ICardProps {
   left: number;
   top: number;
   card: Card;
+  isDraggable: boolean;
   selectCard: (card: Card) => void;
+  handleBeginDragDrop: (card: Card) => void;
 }
 
 class CardComponent extends React.PureComponent<ICardProps> {
@@ -18,8 +20,11 @@ class CardComponent extends React.PureComponent<ICardProps> {
     };
     const faceUp = this.props.card.isFaceUp();
     const selectCard = () => this.props.selectCard(this.props.card);
+    const onDrag = (e: React.DragEvent) => this.props.handleBeginDragDrop(this.props.card);
     return (
       <div className={`card ${this.props.card.getSuit().getName()} ${faceUp ? 'face-up' : 'face-down'}`}
+        draggable={this.props.isDraggable}
+        onDragStart={onDrag}
         style={styles}
         onClick={selectCard}>
         {faceUp && this.renderCardValue()}

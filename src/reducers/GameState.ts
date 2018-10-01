@@ -1,5 +1,5 @@
 import {
-  SELECT_CARD
+  EXECUTE_ACTION, SELECT_CARD
 } from '../actions/gameActions';
 import {
   START_GAME
@@ -25,6 +25,8 @@ export const gameState = (state: any = null, action: any) => {
         console.debug('Skipping game state since card selection could imply one of ' + possibleActions);
       }
       return state;
+    case EXECUTE_ACTION:
+      return gameService.executeAction(action.action);
     default:
       return state;
   }

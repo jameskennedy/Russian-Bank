@@ -1,14 +1,21 @@
 import * as React from 'react';
 import Action from '../engine/objects/actions/Action';
+import Move from '../engine/objects/actions/Move';
 import Card from '../engine/objects/Card';
 import Deck from '../engine/objects/Deck';
 import GameState from '../engine/objects/GameState';
+import MoveInProgress from '../models/MoveInProgress';
 import DeckComponent from './DeckComponent';
 
 interface IGameBoardProps {
   gameState: GameState;
   legalActions: Action[];
   selectCard: (deck: Deck, card: Card) => void;
+  executeAction: (action: Action) => void;
+}
+
+interface IGameBoardState {
+  moveInProgress: MoveInProgress
 }
 
 const deckCoords = {
@@ -20,7 +27,7 @@ const deckCoords = {
   'Spades': { left: 20, top: 20 }
 }
 
-export class GameBoard extends React.PureComponent<IGameBoardProps>  {
+export class GameBoard extends React.Component<IGameBoardProps, IGameBoardState>  {
 
   public render() {
     const gameState = this.props.gameState;
@@ -40,13 +47,19 @@ export class GameBoard extends React.PureComponent<IGameBoardProps>  {
       const childDeck = stackedDecksMap.get(deck.getName());
       const selectCard = (card: Card) => this.props.selectCard(deck, card);
       const selectChildCard = (card: Card) => this.props.selectCard(childDeck!, card);
+      const startDrag = (moveInProgress: MoveInProgress) => this.setState({ moveInProgress });
+      const endDrag = (targetDeck: Deck) => this.executeMoveAction(targetDeck);
       return (
         <DeckComponent key={index++} deck={deck} left={coords.left} top={coords.top}
           legalActions={this.getLegalActionsForDeck(deck)}
-          selectCard={selectCard}>
+          selectCard={selectCard}
+          handleBeginDragDrop={startDrag}
+          handleEndDragDrop={endDrag}>
           {childDeck && !childDeck.isEmpty() && <DeckComponent deck={childDeck}
             legalActions={this.getLegalActionsForDeck(childDeck)} left={0} top={0}
-            selectCard={selectChildCard} />
+            selectCard={selectChildCard}
+            handleBeginDragDrop={startDrag}
+            handleEndDragDrop={endDrag} />
           }
         </DeckComponent>
       );
@@ -56,6 +69,15 @@ export class GameBoard extends React.PureComponent<IGameBoardProps>  {
       <div className="game-board">
         {deckComponents}
       </div>);
+  }
+
+  private executeMoveAction(targetDeck: Deck) {
+    const moveAction = this.props.legalActions.filter(a => a instanceof Move).map(a => a as Move)
+      .find(a => a.getSourceDeckName() === this.state.moveInProgress.getSourceDeck()
+        && a.getTargetDeckName() === targetDeck.getName());
+    if (moveAction) {
+      this.props.executeAction(moveAction);
+    }
   }
 
   private getLegalActionsForDeck(deck: Deck): Action[] {

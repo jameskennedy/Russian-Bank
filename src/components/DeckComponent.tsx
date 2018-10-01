@@ -1,7 +1,8 @@
 import * as React from 'react';
-import Action from '../engine/objects/actions/Action';
+import Action, { ActionType } from '../engine/objects/actions/Action';
 import Card from '../engine/objects/Card';
 import { Deck, DeckMode } from '../engine/objects/Deck';
+import MoveInProgress from '../models/MoveInProgress';
 import CardComponent from './CardComponent';
 
 export interface IDeckProps {
@@ -10,6 +11,8 @@ export interface IDeckProps {
   top: number;
   legalActions: Action[];
   selectCard: (card: Card) => void;
+  handleBeginDragDrop: (moveInProgress: MoveInProgress) => void;
+  handleEndDragDrop: (deck: Deck) => void;
 }
 
 class DeckComponent extends React.PureComponent<IDeckProps> {
@@ -30,9 +33,11 @@ class DeckComponent extends React.PureComponent<IDeckProps> {
 
     const emptyClass = cards.length <= 0 ? 'empty' : '';
     const actionableClass = this.props.legalActions.length === 0 ? '' : 'actionable';
-
+    const onDragDrop = (ev: React.DragEvent) => this.props.handleEndDragDrop(deck);
+    const onDragOver = (ev: React.DragEvent) => ev.preventDefault();
     return (
-      <div className={`deck ${emptyClass} ${actionableClass}`} style={styles}>
+      <div className={`deck ${emptyClass} ${actionableClass}`} style={styles}
+        onDrop={onDragDrop} onDragOver={onDragOver}>
         {cardComponents}
         {this.props.children}
       </div>);
@@ -41,11 +46,15 @@ class DeckComponent extends React.PureComponent<IDeckProps> {
   private createFannedCardComponents(cards: Card[]) {
     const components = [];
     let voffset = 0;
+    const isDraggable = this.deckCanBeMoveSource();
     for (let i = 0; i < cards.length; i += 1) {
+      const startDrag = (card: Card) => this.handleBeginDragDrop(card);
       voffset += (i > cards.length / 2 ? 1 : -1)
         * Math.abs((cards.length / 2) - i) * (20 / cards.length);
       components.push(<CardComponent key={i} card={cards[i]} left={i * 30} top={voffset}
-        selectCard={this.props.selectCard} />);
+        selectCard={this.props.selectCard}
+        isDraggable={isDraggable}
+        handleBeginDragDrop={startDrag} />);
     }
     return components;
   }
@@ -54,12 +63,25 @@ class DeckComponent extends React.PureComponent<IDeckProps> {
     const topCards = Math.min(cards.length, 10);
     const cardsToRender = cards.slice(cards.length - topCards, cards.length);
     const components = [];
+    const isDraggable = this.deckCanBeMoveSource();
+    const startDrag = (card: Card) => this.handleBeginDragDrop(card);
     for (let i = 0; i < cardsToRender.length; i += 1) {
       components.push(<CardComponent key={i} left={i} top={i}
         card={cardsToRender[i]}
-        selectCard={this.props.selectCard} />);
+        selectCard={this.props.selectCard}
+        isDraggable={isDraggable}
+        handleBeginDragDrop={startDrag} />);
     }
     return components;
+  }
+
+  private deckCanBeMoveSource() {
+    return Boolean(this.props.legalActions.find(a => a.getType() === ActionType.MOVE));
+  }
+
+  private handleBeginDragDrop(card: Card) {
+    const transferDeck = new Deck('drag deck', DeckMode.FACE_UP, [card.createCopy()], false);
+    this.props.handleBeginDragDrop(new MoveInProgress(this.props.deck.getName(), transferDeck));
   }
 }
 

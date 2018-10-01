@@ -34,7 +34,7 @@ class GameService {
 
     const legalActions = possibleActions.filter(a => this.ruleEngine.isLegal(a, gameState));
 
-    console.debug(`Legal legalActions: ${legalActions} Possible actions: ${possibleActions}`);
+    console.debug(`Legal legalActions: ${legalActions}`);
     return legalActions;
   }
 
