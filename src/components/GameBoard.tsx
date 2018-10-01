@@ -18,12 +18,12 @@ interface IGameBoardState {
 }
 
 const deckCoords = {
-  'Clubs': { left: 420, top: 20 },
-  'Diamonds': { left: 620, top: 20 },
-  'Hearts': { left: 220, top: 20 },
   'P1': { left: 400, top: 400 },
   'P1 Discard': { left: 600, top: 400 },
-  'Spades': { left: 20, top: 20 }
+  'Suit Pile 1': { left: 20, top: 20 },
+  'Suit Pile 2': { left: 170, top: 20 },
+  'Suit Pile 3': { left: 320, top: 20 },
+  'Suit Pile 4': { left: 470, top: 20 }
 }
 
 export class GameBoard extends React.Component<IGameBoardProps, IGameBoardState>  {

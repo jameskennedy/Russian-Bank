@@ -20,7 +20,13 @@ class Move extends Action {
   public getTargetDeckName() {
     return this.targetDeckName;
   }
-
+  public getSourceDeck(gameState: GameState): Deck {
+    const sourceDeck = gameState.getDeck(this.getSourceDeckName());
+    if (!sourceDeck) {
+      throw new Error(`Move action requires a source deck, ${this.getSourceDeckName()} not found`);
+    }
+    return sourceDeck;
+  }
   public getTargetDeck(gameState: GameState): Deck {
     const targetDeck = gameState.getDeck(this.targetDeckName);
     if (!targetDeck) {

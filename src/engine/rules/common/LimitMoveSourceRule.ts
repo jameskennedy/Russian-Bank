@@ -1,20 +1,15 @@
-import Action from '../../objects/actions/Action';
 import Move from '../../objects/actions/Move';
+import Deck from '../../objects/Deck';
 import GameState from '../../objects/GameState';
-import Rule from '../Rule';
+import MoveActionRule from './MoveActionRule';
 
-class LimitMoveSourceRule extends Rule {
+class LimitMoveSourceRule extends MoveActionRule {
   constructor(private sourceDeckWhiteList: string[], affectedDecks?: string[]) {
     super(affectedDecks)
   }
 
-  public isLegal(action: Action, gameState: GameState): boolean {
-    if (action instanceof Move) {
-      const move = action as Move;
-      const targetDeck = move.getTargetDeck(gameState);
-      return !this.isAffectedDeck(targetDeck) || this.isSourceDeckInWhiteList(action.getSourceDeckName());
-    }
-    return true;
+  protected isMoveLegal(move: Move, sourceDeck: Deck, targetDeck: Deck, gameState: GameState): boolean {
+    return this.isSourceDeckInWhiteList(move.getSourceDeckName());
   }
 
   private isSourceDeckInWhiteList(sourceDeckName: string): boolean {

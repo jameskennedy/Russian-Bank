@@ -2,6 +2,7 @@ import GameService from './GameService';
 import GameBuilder from './internal/GameBuilder';
 import Game from './objects/Game';
 import LimitMoveSourceRule from './rules/common/LimitMoveSourceRule';
+import SameSuitIncreasingRankRule from './rules/common/SameSuitIncreasingRankRule';
 
 class GameFactory {
   private activeGames: Game[] = [];
@@ -11,10 +12,11 @@ class GameFactory {
       .addTopCardDeck('P1:top', 'P1')
       .addRule(new LimitMoveSourceRule(['P1'], ['P1:top']))
       .addDiscardDeck('P1 Discard')
-      .addDiscardDeck('Spades')
-      .addDiscardDeck('Hearts')
-      .addDiscardDeck('Clubs')
-      .addDiscardDeck('Diamonds')
+      .addDiscardDeck('Suit Pile 1')
+      .addDiscardDeck('Suit Pile 2')
+      .addDiscardDeck('Suit Pile 3')
+      .addDiscardDeck('Suit Pile 4')
+      .addRule(new SameSuitIncreasingRankRule(['Suit Pile 1', 'Suit Pile 2', 'Suit Pile 3', 'Suit Pile 4']))
       .create(this.newUniqueGameId());
 
     this.activeGames.push(game);
