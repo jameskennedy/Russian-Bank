@@ -1,3 +1,4 @@
+import Action from '../objects/actions/Action';
 import Card from '../objects/Card';
 import CardSuit from '../objects/CardSuit';
 import { Deck, DeckMode } from '../objects/Deck';
@@ -12,10 +13,11 @@ import Rule from '../rules/Rule';
 class GameBuilder {
   private decks: Deck[] = [];
   private rules: Rule[] = this.createStandardRules();
+  private actions: Action[] = [];
 
   public addStandardCardDeck(name: string): GameBuilder {
     const cards = [];
-    for (let i = 1; i <= 13; i += 1) {
+    for (let i = 1; i <= 2; i += 1) {
       cards.push(new Card(i, CardSuit.HEARTS, false));
       cards.push(new Card(i, CardSuit.SPADES, false));
       cards.push(new Card(i, CardSuit.DIAMONDS, false));
@@ -60,9 +62,14 @@ class GameBuilder {
     return this;
   }
 
+  public addAction(action: Action): GameBuilder {
+    this.actions.push(action);
+    return this;
+  }
+
   public create(gameId: number): Game {
     const initialState = new GameState(gameId, 0, this.decks);
-    return new Game(initialState.getGameId(), initialState, [...this.rules]);
+    return new Game(initialState.getGameId(), initialState, [...this.rules], [...this.actions]);
   }
 
 

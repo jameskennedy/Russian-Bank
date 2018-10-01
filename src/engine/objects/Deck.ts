@@ -50,9 +50,6 @@ export class Deck {
   }
 
   public pushCard(card: Card) {
-    if (!this.acceptsNewCards) {
-      throw new Error(`Illegal attempt to add card to ${this}`);
-    }
     this.cards.push(card);
     card.setFaceUp(this.isFaceUp())
   }

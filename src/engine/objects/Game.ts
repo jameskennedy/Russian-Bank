@@ -1,10 +1,11 @@
 import Rule from '../rules/Rule'
+import Action from './actions/Action';
 import GameState from "./GameState";
 
 class Game {
   private gameHistory: GameState[];
 
-  constructor(private gameId: number, initialState: GameState, private rules: Rule[]) {
+  constructor(private gameId: number, initialState: GameState, private rules: Rule[], private actions: Action[]) {
     this.gameHistory = [initialState];
   }
 
@@ -21,7 +22,11 @@ class Game {
   }
 
   public getRules() {
-    return this.rules;
+    return [...this.rules];
+  }
+
+  public getGameActions(): any {
+    return [...this.actions];
   }
 }
 

@@ -17,7 +17,7 @@ class GameService {
   }
 
   public getLegalActions(gameState: GameState = this.game.getCurrentGameState()): Action[] {
-    const possibleActions: Action[] = [];
+    const possibleActions: Action[] = this.game.getGameActions();
     const decks: Deck[] = gameState.getDecks();
     decks.forEach((sourceDeck) => {
       if (sourceDeck.getMode() === DeckMode.FACE_DOWN) {
