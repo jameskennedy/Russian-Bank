@@ -2,12 +2,10 @@ import {
   connect
 } from 'react-redux';
 import { Dispatch } from 'redux';
-import { executeAction, selectCardAction } from '../actions/gameActions';
+import { executeAction } from '../actions/gameActions';
 import GameBoard from '../components/GameBoard';
 import GameFactory from '../engine/GameFactory';
 import Action from '../engine/objects/actions/Action';
-import Card from '../engine/objects/Card';
-import Deck from '../engine/objects/Deck';
 import GameState from '../engine/objects/GameState';
 import { IStore } from '../reducers';
 
@@ -17,7 +15,6 @@ interface IMapStateProps {
 }
 
 interface IDispatchFromProps {
-  selectCard: (deck: Deck, card: Card) => void;
   executeAction: (action: Action) => void;
 }
 
@@ -36,10 +33,8 @@ const mapStateToProps = (state: IStore) => {
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     executeAction: (action: Action) => {
+      console.log('dispatching: ' + action)
       dispatch(executeAction(action));
-    },
-    selectCard: (deck: Deck, card: Card) => {
-      dispatch(selectCardAction(deck, card));
     }
   }
 };

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Action from '../engine/objects/actions/Action';
+import Action, { ActionType } from '../engine/objects/actions/Action';
 import Move from '../engine/objects/actions/Move';
 import Card from '../engine/objects/Card';
 import Deck from '../engine/objects/Deck';
@@ -10,7 +10,6 @@ import DeckComponent from './DeckComponent';
 interface IGameBoardProps {
   gameState: GameState;
   legalActions: Action[];
-  selectCard: (deck: Deck, card: Card) => void;
   executeAction: (action: Action) => void;
 }
 
@@ -45,8 +44,8 @@ export class GameBoard extends React.Component<IGameBoardProps, IGameBoardState>
       }
       const coords = deckCoords[deck.getName()] || { left: 0, top: 0 };
       const childDeck = stackedDecksMap.get(deck.getName());
-      const selectCard = (card: Card) => this.props.selectCard(deck, card);
-      const selectChildCard = (card: Card) => this.props.selectCard(childDeck!, card);
+      const selectCard = (card: Card) => this.executeNonMoveAction(deck, card);
+      const selectChildCard = (card: Card) => this.executeNonMoveAction(childDeck!, card);
       const startDrag = (moveInProgress: MoveInProgress) => this.setState({ moveInProgress });
       const endDrag = (targetDeck: Deck) => this.executeMoveAction(targetDeck);
       return (
@@ -77,6 +76,14 @@ export class GameBoard extends React.Component<IGameBoardProps, IGameBoardState>
         && a.getTargetDeckName() === targetDeck.getName());
     if (moveAction) {
       this.props.executeAction(moveAction);
+    }
+  }
+
+  private executeNonMoveAction(targetDeck: Deck, targetCard: Card) {
+    const action = this.props.legalActions.filter(a => !(a.getType() === ActionType.MOVE))
+      .find(a => a.getSourceDeckName() === targetDeck.getName());
+    if (action) {
+      this.props.executeAction(action);
     }
   }
 
