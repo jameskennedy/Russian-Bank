@@ -5,7 +5,8 @@ export enum DeckMode {
   FACE_UP = 'face-up',
   FAN_UP = 'fan-up',
   SPREAD_RIGHT = 'face-up-spread-right',
-  SPREAD_LEFT = 'face-up-spread-left'
+  SPREAD_LEFT = 'face-up-spread-left',
+  SPREAD_DOWN = 'face-up-spread-down'
 }
 
 export class Deck {

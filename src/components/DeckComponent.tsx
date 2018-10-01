@@ -27,6 +27,8 @@ class DeckComponent extends React.PureComponent<IDeckProps> {
     let cardComponents = [];
     if (deck.getMode() === DeckMode.FAN_UP) {
       cardComponents = this.createFannedCardComponents(cards);
+    } else if (deck.getMode() === DeckMode.SPREAD_DOWN) {
+      cardComponents = this.createSpreadDownCardComponents(cards);
     } else {
       cardComponents = this.createStackedCardComponents(cards);
     }
@@ -52,6 +54,19 @@ class DeckComponent extends React.PureComponent<IDeckProps> {
       voffset += (i > cards.length / 2 ? 1 : -1)
         * Math.abs((cards.length / 2) - i) * (20 / cards.length);
       components.push(<CardComponent key={i} card={cards[i]} left={i * 30} top={voffset}
+        selectCard={this.props.selectCard}
+        isDraggable={isDraggable}
+        handleBeginDragDrop={startDrag} />);
+    }
+    return components;
+  }
+
+  private createSpreadDownCardComponents(cards: Card[]) {
+    const components = [];
+    const isDraggable = this.deckCanBeMoveSource();
+    for (let i = 0; i < cards.length; i += 1) {
+      const startDrag = (card: Card) => this.handleBeginDragDrop(card);
+      components.push(<CardComponent key={i} card={cards[i]} left={0} top={i * 35}
         selectCard={this.props.selectCard}
         isDraggable={isDraggable}
         handleBeginDragDrop={startDrag} />);

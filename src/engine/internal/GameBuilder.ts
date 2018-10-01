@@ -5,6 +5,7 @@ import Game from '../objects/Game';
 import GameState from '../objects/GameState';
 import CannotMoveIfNotFaceUp from '../rules/common/CannotMoveIfNotFaceUpRule';
 import MaxDeckSizeRule from '../rules/common/MaxDeckSizeRule';
+import RedBlackDescendingRule from '../rules/common/RedBlackDescendingRule';
 import NoActionOnCoveredDeck from '../rules/fundamental/NoActionOnCoveredDeckRule';
 import Rule from '../rules/Rule';
 
@@ -33,6 +34,12 @@ class GameBuilder {
 
   public addHandDeck(name: string): GameBuilder {
     this.decks.push(new Deck(name, DeckMode.FAN_UP, [], true));
+    return this;
+  }
+
+  public addRedBlackDescendingDeck(name: string): GameBuilder {
+    this.decks.push(new Deck(name, DeckMode.SPREAD_DOWN, [], true));
+    this.addRule(new RedBlackDescendingRule([name]));
     return this;
   }
 

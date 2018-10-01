@@ -12,11 +12,19 @@ class GameFactory {
       .addTopCardDeck('P1:top', 'P1')
       .addRule(new LimitMoveSourceRule(['P1'], ['P1:top']))
       .addDiscardDeck('P1 Discard')
+      .addRule(new LimitMoveSourceRule(['P1:top'], ['P1 Discard']))
       .addDiscardDeck('Suit Pile 1')
       .addDiscardDeck('Suit Pile 2')
       .addDiscardDeck('Suit Pile 3')
       .addDiscardDeck('Suit Pile 4')
       .addRule(new SameSuitIncreasingRankRule(['Suit Pile 1', 'Suit Pile 2', 'Suit Pile 3', 'Suit Pile 4']))
+      .addRedBlackDescendingDeck('House 1')
+      .addRedBlackDescendingDeck('House 2')
+      .addRedBlackDescendingDeck('House 3')
+      .addRedBlackDescendingDeck('House 4')
+      .addRedBlackDescendingDeck('House 5')
+      .addRedBlackDescendingDeck('House 6')
+      .addRedBlackDescendingDeck('House 7')
       .create(this.newUniqueGameId());
 
     this.activeGames.push(game);

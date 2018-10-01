@@ -18,8 +18,15 @@ interface IGameBoardState {
 }
 
 const deckCoords = {
-  'P1': { left: 400, top: 400 },
-  'P1 Discard': { left: 600, top: 400 },
+  'House 1': { left: 20, top: 200 },
+  'House 2': { left: 170, top: 200 },
+  'House 3': { left: 320, top: 200 },
+  'House 4': { left: 470, top: 200 },
+  'House 5': { left: 620, top: 200 },
+  'House 6': { left: 770, top: 200 },
+  'House 7': { left: 910, top: 200 },
+  'P1': { left: 770, top: 20 },
+  'P1 Discard': { left: 910, top: 20 },
   'Suit Pile 1': { left: 20, top: 20 },
   'Suit Pile 2': { left: 170, top: 20 },
   'Suit Pile 3': { left: 320, top: 20 },
