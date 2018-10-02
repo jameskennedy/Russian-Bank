@@ -17,7 +17,7 @@ class GameBuilder {
 
   public addStandardCardDeck(name: string): GameBuilder {
     const cards = [];
-    for (let i = 1; i <= 2; i += 1) {
+    for (let i = 1; i <= 13; i += 1) {
       cards.push(new Card(i, CardSuit.HEARTS, false));
       cards.push(new Card(i, CardSuit.SPADES, false));
       cards.push(new Card(i, CardSuit.DIAMONDS, false));
