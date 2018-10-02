@@ -14,6 +14,7 @@ class GameBuilder {
   private decks: Deck[] = [];
   private rules: Rule[] = this.createStandardRules();
   private actions: Action[] = [];
+  private deal?: (gameState: GameState) => void;
 
   public addStandardCardDeck(name: string): GameBuilder {
     const cards = [];
@@ -67,8 +68,16 @@ class GameBuilder {
     return this;
   }
 
+  public dealCards(deal: (gameState: GameState) => void): GameBuilder {
+    this.deal = deal;
+    return this;
+  }
+
   public create(gameId: number): Game {
     const initialState = new GameState(gameId, 0, this.decks);
+    if (this.deal) {
+      this.deal(initialState);
+    }
     return new Game(initialState.getGameId(), initialState, [...this.rules], [...this.actions]);
   }
 

@@ -12,7 +12,7 @@ let gameService: GameService;
 export const gameState = (state: any = null, action: any) => {
   switch (action.type) {
     case START_GAME:
-      gameService = GameFactory.startRussianBankGame();
+      gameService = GameFactory.startSolitaireGame();
       return gameService.getCopyOfCurrentGameState();
     case EXECUTE_ACTION:
       return gameService.executeAction(action.action);

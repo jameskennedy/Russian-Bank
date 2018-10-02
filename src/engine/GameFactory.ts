@@ -8,7 +8,7 @@ import SameSuitIncreasingRankRule from './rules/common/SameSuitIncreasingRankRul
 class GameFactory {
   private activeGames: Game[] = [];
 
-  public startRussianBankGame() {
+  public startSolitaireGame() {
     const game = new GameBuilder().addStandardCardDeck('P1')
       .addTopCardDeck('P1:top', 'P1')
       .addRule(new LimitMoveSourceRule(['P1'], ['P1:top']))
@@ -27,7 +27,18 @@ class GameFactory {
       .addRedBlackDescendingDeck('House 5')
       .addRedBlackDescendingDeck('House 6')
       .addRedBlackDescendingDeck('House 7')
+      .dealCards((gameState) => {
+        const mainDeck = gameState.getDeck('P1');
+        for (let i = 1; i <= 7; i++) {
+          const houseDeck = gameState.getDeck('House ' + i);
+          for (let j = 1; j <= (7 - i + 1); j++) {
+            houseDeck.pushCard(mainDeck.popCard()!);
+          }
+        }
+      })
       .create(this.newUniqueGameId());
+
+
 
     this.activeGames.push(game);
     return new GameService(game);
