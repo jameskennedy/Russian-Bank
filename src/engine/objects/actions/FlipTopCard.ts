@@ -5,7 +5,7 @@ import Move from './Move';
 
 class FlipTopCard extends Move {
   constructor(sourceDeckName: string) {
-    super(sourceDeckName, '');
+    super(sourceDeckName, '', '');
     this.type = ActionType.FLIP;
   }
 

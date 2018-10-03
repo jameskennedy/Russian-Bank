@@ -1,17 +1,18 @@
+import Card from '../Card';
 import Deck from '../Deck';
 import GameState from '../GameState';
 import { Action, ActionType } from './Action';
 
 class Move extends Action {
-  constructor(sourceDeckName: string, private targetDeckName: string) {
-    super(ActionType.MOVE, sourceDeckName);
+  constructor(sourceDeckName: string, private targetDeckName: string, sourceCardName: string) {
+    super(ActionType.MOVE, sourceDeckName, sourceCardName);
   }
 
   public isLegal(gameState: GameState) {
-    const sourceDeck = this.getSourceDeck(gameState);
     const targetDeck = this.getTargetDeck(gameState);
-    return sourceDeck.getCards().length > 0 && this.getSourceDeckName() !== this.targetDeckName
-      && targetDeck.isAcceptingNewCards();
+    return this.getSourceDeckName() !== this.targetDeckName
+      && targetDeck.isAcceptingNewCards()
+      && this.getCardsToMove(gameState).length > 0;
   }
 
   public execute(gameState: GameState) {
@@ -42,16 +43,27 @@ class Move extends Action {
     return targetDeck;
   }
 
+  public getCardsToMove(gameState: GameState): Card[] {
+    const sourceDeck = this.getSourceDeck(gameState);
+    let sourceCard = sourceDeck.getCard(this.getSourceCardName());
+    if (!sourceCard) {
+      sourceCard = this.getCardsToMove.length > 0 ? sourceDeck.getTopCard() : undefined;
+    }
+    return sourceCard ? sourceDeck.getCardsToMoveWith(sourceCard) : [];
+  }
+
   public toString() {
-    return `${super.toString()} card from ${this.getSourceDeckName() || 'no source'} to ${this.targetDeckName}`;
+    return `${super.toString()} ${this.getSourceCardName()} from ${this.getSourceDeckName() || 'no source'} to ${this.targetDeckName}`;
   }
 
   protected move(sourceDeck: Deck, targetDeck: Deck) {
-    const card = sourceDeck.popCard();
-    if (!card) {
-      throw new Error(`Cannot ${this} because ${sourceDeck} is empty`);
+    let sourceCard = sourceDeck.getCard(this.getSourceCardName());
+    if (!sourceCard) {
+      sourceCard = sourceDeck.getTopCard();
     }
-    targetDeck.pushCard(card);
+    const cards = sourceDeck.getCardsToMoveWith(sourceCard);
+    sourceDeck.removeCards(cards);
+    cards.forEach(card => targetDeck.pushCard(card));
   }
 }
 

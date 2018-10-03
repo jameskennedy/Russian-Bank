@@ -26,7 +26,7 @@ export class Action {
   }
 
   public isLegal(gameState: GameState) {
-    return true;
+    return gameState.getDeck(this.getSourceDeckName()).hasCard(this.getSourceCardName());
   }
 
   public toString() {

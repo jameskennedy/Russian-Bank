@@ -10,15 +10,15 @@ class SameSuitIncreasingRankRule extends MoveActionRule {
   }
 
   protected isMoveLegal(move: Move, sourceDeck: Deck, targetDeck: Deck, gameState: GameState): boolean {
+    const sourceCard = move.getCardsToMove(gameState);
+    if (sourceCard.length !== 1) {
+      return false;
+    }
     const topCard: Card = targetDeck.getTopCard();
-    let sourceCard = sourceDeck.getCards().find(c => c.getName() === move.getSourceCardName());
-    if (!sourceCard) {
-      sourceCard = sourceDeck.getTopCard();
-    }
     if (!topCard) {
-      return sourceCard.getRank() === 1;
+      return sourceCard[0].getRank() === 1;
     }
-    return sourceCard.getRank() === topCard.getRank() + 1 && sourceCard.getSuit() === topCard.getSuit();
+    return sourceCard[0].getRank() === topCard.getRank() + 1 && sourceCard[0].getSuit() === topCard.getSuit();
   }
 }
 

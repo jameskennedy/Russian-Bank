@@ -25,7 +25,8 @@ class GameService {
       } else {
         decks.forEach((targetDeck) => {
           if (sourceDeck !== targetDeck) {
-            possibleActions.push(new Move(sourceDeck.getName(), targetDeck.getName()));
+            sourceDeck.getMovableCards().forEach(card =>
+              possibleActions.push(new Move(sourceDeck.getName(), targetDeck.getName(), card.getName())));
           }
         })
       }

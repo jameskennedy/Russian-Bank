@@ -16,12 +16,40 @@ export class Deck {
   }
 
 
-  public getName() {
+  public getName(): string {
     return this.name;
   }
 
-  public getCards() {
+  public getCards(): Card[] {
     return this.cards;
+  }
+
+  public getCard(cardName?: string): Card | undefined {
+    return cardName ? this.getCards().find(c => c.getName() === cardName) : undefined;
+  }
+
+  public getMovableCards(): Card[] {
+    if (this.isEmpty() || this.isSpreadDeck()) {
+      return this.getCards();
+    }
+    return [this.getTopCard()];
+  }
+
+
+  public getCardsToMoveWith(sourceCard: Card): Card[] {
+    if (this.isSpreadDeck()) {
+      const index = this.cards.indexOf(sourceCard);
+      return index === undefined ? [] : this.cards.slice(index);
+    }
+    return [sourceCard];
+  }
+
+  public removeCards(cards: Card[]) {
+    this.cards = this.cards.filter(c => !cards.find(r => r === c));
+  }
+
+  public hasCard(cardName: string | undefined): boolean {
+    return !!cardName && !!this.getCards().find(c => c.getName() === cardName);
   }
 
   public isEmpty(): boolean {
@@ -80,6 +108,10 @@ export class Deck {
 
   public toString() {
     return `${this.name} deck`;
+  }
+
+  private isSpreadDeck(): boolean {
+    return this.mode === DeckMode.SPREAD_DOWN || this.mode === DeckMode.SPREAD_LEFT || this.mode === DeckMode.SPREAD_RIGHT;
   }
 }
 
