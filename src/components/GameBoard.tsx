@@ -55,6 +55,7 @@ export class GameBoard extends React.Component<IGameBoardProps, IGameBoardState>
       const selectChildCard = (card: Card) => this.executeNonMoveAction(childDeck!, card);
       const startDrag = (moveInProgress: MoveInProgress) => this.setState({ moveInProgress });
       const endDrag = (targetDeck: Deck) => this.executeMoveAction(targetDeck);
+      const childDeckOffset = Math.min(10, deck.getCards().length);
       return (
         <DeckComponent key={index++} deck={deck} left={coords.left} top={coords.top}
           legalActions={this.getLegalActionsForDeck(deck)}
@@ -62,7 +63,7 @@ export class GameBoard extends React.Component<IGameBoardProps, IGameBoardState>
           handleBeginDragDrop={startDrag}
           handleEndDragDrop={endDrag}>
           {childDeck && !childDeck.isEmpty() && <DeckComponent deck={childDeck}
-            legalActions={this.getLegalActionsForDeck(childDeck)} left={deck.getCards().length} top={deck.getCards().length}
+            legalActions={this.getLegalActionsForDeck(childDeck)} left={childDeckOffset} top={childDeckOffset}
             selectCard={selectChildCard}
             handleBeginDragDrop={startDrag}
             handleEndDragDrop={endDrag} />
@@ -78,9 +79,12 @@ export class GameBoard extends React.Component<IGameBoardProps, IGameBoardState>
   }
 
   private executeMoveAction(targetDeck: Deck) {
+    const moveInProgress = this.state.moveInProgress;
+    const sourceCard = moveInProgress.getTransferDeck().getCards()[0];
     const moveAction = this.props.legalActions.filter(a => a instanceof Move).map(a => a as Move)
-      .find(a => a.getSourceDeckName() === this.state.moveInProgress.getSourceDeck()
-        && a.getTargetDeckName() === targetDeck.getName());
+      .find(a => a.getSourceDeckName() === moveInProgress.getSourceDeck()
+        && a.getTargetDeckName() === targetDeck.getName()
+        && (!a.getSourceCardName() || a.getSourceCardName() === sourceCard.getName()));
     if (moveAction) {
       this.props.executeAction(moveAction);
     }

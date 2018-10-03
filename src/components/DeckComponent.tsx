@@ -50,7 +50,7 @@ class DeckComponent extends React.PureComponent<IDeckProps> {
     let voffset = 0;
     const isDraggable = this.deckCanBeMoveSource();
     for (let i = 0; i < cards.length; i += 1) {
-      const startDrag = (card: Card) => this.handleBeginDragDrop(card);
+      const startDrag = (card: Card) => this.handleBeginDragDrop([card]);
       voffset += (i > cards.length / 2 ? 1 : -1)
         * Math.abs((cards.length / 2) - i) * (20 / cards.length);
       components.push(<CardComponent key={i} card={cards[i]} left={i * 30} top={voffset}
@@ -65,7 +65,7 @@ class DeckComponent extends React.PureComponent<IDeckProps> {
     const components = [];
     const isDraggable = this.deckCanBeMoveSource();
     for (let i = 0; i < cards.length; i += 1) {
-      const startDrag = (card: Card) => this.handleBeginDragDrop(card);
+      const startDrag = (card: Card) => this.handleBeginDragDrop(cards.slice(i));
       components.push(<CardComponent key={i} card={cards[i]} left={0} top={i * 35}
         selectCard={this.props.selectCard}
         isDraggable={isDraggable}
@@ -79,7 +79,7 @@ class DeckComponent extends React.PureComponent<IDeckProps> {
     const cardsToRender = cards.slice(cards.length - topCards, cards.length);
     const components = [];
     const isDraggable = this.deckCanBeMoveSource();
-    const startDrag = (card: Card) => this.handleBeginDragDrop(card);
+    const startDrag = (card: Card) => this.handleBeginDragDrop([card]);
     for (let i = 0; i < cardsToRender.length; i += 1) {
       components.push(<CardComponent key={i} left={i} top={i}
         card={cardsToRender[i]}
@@ -94,8 +94,8 @@ class DeckComponent extends React.PureComponent<IDeckProps> {
     return Boolean(this.props.legalActions.find(a => a.getType() === ActionType.MOVE));
   }
 
-  private handleBeginDragDrop(card: Card) {
-    const transferDeck = new Deck('drag deck', DeckMode.FACE_UP, [card.createCopy()], false);
+  private handleBeginDragDrop(cards: Card[]) {
+    const transferDeck = new Deck('drag deck', DeckMode.FACE_UP, cards, false);
     this.props.handleBeginDragDrop(new MoveInProgress(this.props.deck.getName(), transferDeck));
   }
 }
