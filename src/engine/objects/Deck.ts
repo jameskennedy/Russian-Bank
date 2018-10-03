@@ -66,11 +66,11 @@ export class Deck {
       this.cards[j] = temp;
     }
   }
-  public getStackdOnDeck() {
+  public getStackedOnDeck() {
     return this.stackedOnDeck;
   }
 
-  public setStackdOnDeck(stackedOnDeck?: Deck) {
+  public setStackedOnDeck(stackedOnDeck?: Deck) {
     this.stackedOnDeck = stackedOnDeck;
   }
 

@@ -27,8 +27,8 @@ class GameState {
 
   public getDecksByStack(): Map<string, Deck> {
     return this.decks.reduce((map, deck) => {
-      if (deck.getStackdOnDeck()) {
-        map.set(deck.getStackdOnDeck()!.getName(), deck);
+      if (deck.getStackedOnDeck()) {
+        map.set(deck.getStackedOnDeck()!.getName(), deck);
       }
       return map;
     }, new Map<string, Deck>());
@@ -56,12 +56,12 @@ class GameState {
 
   private copyDeckReferences(oldNewMap: Map<string, Deck>) {
     this.getDecks().forEach(deck => {
-      if (deck.getStackdOnDeck()) {
-        const oldFlipToDeck = deck.getStackdOnDeck()!;
+      if (deck.getStackedOnDeck()) {
+        const oldFlipToDeck = deck.getStackedOnDeck()!;
         const newDeck = oldNewMap.get(deck.getName());
         if (newDeck) {
           const newFlipToDeck = oldNewMap.get(oldFlipToDeck.getName());
-          newDeck.setStackdOnDeck(newFlipToDeck);
+          newDeck.setStackedOnDeck(newFlipToDeck);
         }
       }
     });

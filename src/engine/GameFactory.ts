@@ -9,7 +9,7 @@ class GameFactory {
   private activeGames: Game[] = [];
 
   public startSolitaireGame() {
-    const game = new GameBuilder().addStandardCardDeck('P1')
+    const builder = new GameBuilder().addStandardCardDeck('P1')
       .addTopCardDeck('P1:top', 'P1')
       .addRule(new LimitMoveSourceRule(['P1'], ['P1:top']))
       .addDiscardDeck('P1 Discard')
@@ -19,24 +19,24 @@ class GameFactory {
       .addDiscardDeck('Suit Pile 2')
       .addDiscardDeck('Suit Pile 3')
       .addDiscardDeck('Suit Pile 4')
-      .addRule(new SameSuitIncreasingRankRule(['Suit Pile 1', 'Suit Pile 2', 'Suit Pile 3', 'Suit Pile 4']))
-      .addRedBlackDescendingDeck('House 1')
-      .addRedBlackDescendingDeck('House 2')
-      .addRedBlackDescendingDeck('House 3')
-      .addRedBlackDescendingDeck('House 4')
-      .addRedBlackDescendingDeck('House 5')
-      .addRedBlackDescendingDeck('House 6')
-      .addRedBlackDescendingDeck('House 7')
-      .dealCards((gameState) => {
-        const mainDeck = gameState.getDeck('P1');
-        for (let i = 1; i <= 7; i++) {
-          const houseDeck = gameState.getDeck('House ' + i);
-          for (let j = 1; j <= (7 - i + 1); j++) {
-            houseDeck.pushCard(mainDeck.popCard()!);
-          }
+      .addRule(new SameSuitIncreasingRankRule(['Suit Pile 1', 'Suit Pile 2', 'Suit Pile 3', 'Suit Pile 4']));
+    for (let i = 1; i <= 7; i++) {
+      builder.addRedBlackDescendingDeck('House ' + i)
+        .addEmptyFaceDownDeck('House feeder ' + i)
+        .stackDeckOnTopOf('House ' + i, 'House feeder ' + i);
+    }
+    builder.dealCards((gameState) => {
+      const mainDeck = gameState.getDeck('P1');
+      for (let i = 1; i <= 7; i++) {
+        let houseDeck = gameState.getDeck('House feeder ' + i);
+        for (let j = 1; j <= (7 - i); j++) {
+          houseDeck.pushCard(mainDeck.popCard()!);
         }
-      })
-      .create(this.newUniqueGameId());
+        houseDeck = gameState.getDeck('House ' + i);
+        houseDeck.pushCard(mainDeck.popCard()!);
+      }
+    })
+    const game = builder.create(this.newUniqueGameId());
 
 
 

@@ -18,13 +18,13 @@ interface IGameBoardState {
 }
 
 const deckCoords = {
-  'House 1': { left: 20, top: 200 },
-  'House 2': { left: 170, top: 200 },
-  'House 3': { left: 320, top: 200 },
-  'House 4': { left: 470, top: 200 },
-  'House 5': { left: 620, top: 200 },
-  'House 6': { left: 770, top: 200 },
-  'House 7': { left: 910, top: 200 },
+  'House feeder 1': { left: 20, top: 200 },
+  'House feeder 2': { left: 170, top: 200 },
+  'House feeder 3': { left: 320, top: 200 },
+  'House feeder 4': { left: 470, top: 200 },
+  'House feeder 5': { left: 620, top: 200 },
+  'House feeder 6': { left: 770, top: 200 },
+  'House feeder 7': { left: 910, top: 200 },
   'P1': { left: 770, top: 20 },
   'P1 Discard': { left: 910, top: 20 },
   'Suit Pile 1': { left: 20, top: 20 },
@@ -46,7 +46,7 @@ export class GameBoard extends React.Component<IGameBoardProps, IGameBoardState>
     const decks = gameState.getDecks();
     const stackedDecksMap: Map<string, Deck> = gameState.getDecksByStack();
     const deckComponents = decks.map((deck: Deck) => {
-      if (deck.getStackdOnDeck()) {
+      if (deck.getStackedOnDeck()) {
         return undefined;
       }
       const coords = deckCoords[deck.getName()] || { left: 0, top: 0 };
@@ -62,7 +62,7 @@ export class GameBoard extends React.Component<IGameBoardProps, IGameBoardState>
           handleBeginDragDrop={startDrag}
           handleEndDragDrop={endDrag}>
           {childDeck && !childDeck.isEmpty() && <DeckComponent deck={childDeck}
-            legalActions={this.getLegalActionsForDeck(childDeck)} left={0} top={0}
+            legalActions={this.getLegalActionsForDeck(childDeck)} left={deck.getCards().length} top={deck.getCards().length}
             selectCard={selectChildCard}
             handleBeginDragDrop={startDrag}
             handleEndDragDrop={endDrag} />

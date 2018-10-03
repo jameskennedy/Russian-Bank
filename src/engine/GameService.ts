@@ -22,7 +22,6 @@ class GameService {
     decks.forEach((sourceDeck) => {
       if (sourceDeck.getMode() === DeckMode.FACE_DOWN) {
         possibleActions.push(new FlipTopCard(sourceDeck.getName()));
-
       } else {
         decks.forEach((targetDeck) => {
           if (sourceDeck !== targetDeck) {

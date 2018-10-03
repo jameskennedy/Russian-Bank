@@ -19,7 +19,7 @@ class NoActionOnCoveredDeck extends Rule {
       const move = action as Move;
       const targetDeck = gameState.getDeck(move.getTargetDeckName());
       const coveringDeck = gameState.getDecksByStack().get(targetDeck.getName());
-      return !Boolean(coveringDeck);
+      return !coveringDeck || coveringDeck.isEmpty();
     }
     return true;
   }

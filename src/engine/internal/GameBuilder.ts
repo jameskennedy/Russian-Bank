@@ -5,6 +5,7 @@ import { Deck, DeckMode } from '../objects/Deck';
 import Game from '../objects/Game';
 import GameState from '../objects/GameState';
 import CannotMoveIfNotFaceUp from '../rules/common/CannotMoveIfNotFaceUpRule';
+import LimitMoveSourceRule from '../rules/common/LimitMoveSourceRule';
 import MaxDeckSizeRule from '../rules/common/MaxDeckSizeRule';
 import RedBlackDescendingRule from '../rules/common/RedBlackDescendingRule';
 import NoActionOnCoveredDeck from '../rules/fundamental/NoActionOnCoveredDeckRule';
@@ -24,8 +25,14 @@ class GameBuilder {
       cards.push(new Card(i, CardSuit.DIAMONDS, false));
       cards.push(new Card(i, CardSuit.CLUBS, false));
     }
-    const deck = new Deck(name, DeckMode.FACE_DOWN, cards);
+    const deck = new Deck(name, DeckMode.FACE_DOWN, cards, false);
     deck.shuffle();
+    this.decks.push(deck);
+    return this;
+  }
+
+  public addEmptyFaceDownDeck(name: string) {
+    const deck = new Deck(name, DeckMode.FACE_DOWN, [], true);
     this.decks.push(deck);
     return this;
   }
@@ -48,13 +55,20 @@ class GameBuilder {
 
   public addTopCardDeck(name: string, stackedOnDeckName: string): GameBuilder {
     const deck = new Deck(name, DeckMode.FACE_UP, [], true);
-    const bottomDeck = this.decks.find(d => d.getName() === stackedOnDeckName);
+    this.decks.push(deck);
+    this.stackDeckOnTopOf(name, stackedOnDeckName);
+    this.addRule(new MaxDeckSizeRule(1, [name]));
+    this.addRule(new LimitMoveSourceRule([stackedOnDeckName], [name]))
+    return this;
+  }
+
+  public stackDeckOnTopOf(deckName: string, stackedOnDeckName: string): GameBuilder {
+    const deck = this.getDeck(deckName);
+    const bottomDeck = this.getDeck(stackedOnDeckName);
     if (!bottomDeck) {
       throw new Error(`Referenced unknown dek ${stackedOnDeckName}`);
     }
-    deck.setStackdOnDeck(bottomDeck);
-    this.decks.push(deck);
-    this.addRule(new MaxDeckSizeRule(1, [name]))
+    deck.setStackedOnDeck(bottomDeck);
     return this;
   }
 
@@ -81,6 +95,13 @@ class GameBuilder {
     return new Game(initialState.getGameId(), initialState, [...this.rules], [...this.actions]);
   }
 
+  private getDeck(name: string) {
+    const deck = this.decks.find(d => d.getName() === name);
+    if (!deck) {
+      throw new Error(`Referenced unknown deck ${name}`);
+    }
+    return deck;
+  }
 
   private createStandardRules(): Rule[] {
     return [new CannotMoveIfNotFaceUp(), new NoActionOnCoveredDeck()];

@@ -8,13 +8,20 @@ class Move extends Action {
   }
 
   public isLegal(gameState: GameState) {
-    const sourceDeck = gameState.getDeck(this.getSourceDeckName() || '');
-    return sourceDeck.getCards().length > 0 && this.getSourceDeckName() !== this.targetDeckName;
+    const sourceDeck = this.getSourceDeck(gameState);
+    const targetDeck = this.getTargetDeck(gameState);
+    return sourceDeck.getCards().length > 0 && this.getSourceDeckName() !== this.targetDeckName
+      && targetDeck.isAcceptingNewCards();
   }
 
   public execute(gameState: GameState) {
     const sourceDeck = gameState.getDeck(this.getSourceDeckName() || '');
-    this.move(sourceDeck, this.getTargetDeck(gameState));
+    let targetDeck = this.getTargetDeck(gameState);
+    const stackedDeck = gameState.getDecksByStack().get(targetDeck.getName());
+    if (stackedDeck && stackedDeck.isEmpty()) {
+      targetDeck = stackedDeck;
+    }
+    this.move(sourceDeck, targetDeck);
   }
 
   public getTargetDeckName() {
