@@ -1,6 +1,8 @@
 import GameService from './GameService';
 import GameBuilder from './internal/GameBuilder';
 import FlipDeck from './objects/actions/FlipDeck';
+import Move from './objects/actions/Move';
+import TapDeck from './objects/actions/TapDeck';
 import Game from './objects/Game';
 import LimitMoveSourceRule from './rules/common/LimitMoveSourceRule';
 import SameSuitIncreasingRankRule from './rules/common/SameSuitIncreasingRankRule';
@@ -14,6 +16,7 @@ class GameFactory {
       .addRule(new LimitMoveSourceRule(['P1'], ['P1:top']))
       .addDiscardDeck('P1 Discard')
       .addRule(new LimitMoveSourceRule(['P1:top'], ['P1 Discard']))
+      .addAction(new TapDeck('P1:top', new Move('P1:top', 'P1 Discard', 'top')))
       .addAction(new FlipDeck('P1 Discard', 'P1'))
       .addDiscardDeck('Suit Pile 1')
       .addDiscardDeck('Suit Pile 2')

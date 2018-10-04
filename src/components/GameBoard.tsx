@@ -25,8 +25,8 @@ const deckCoords = {
   'House feeder 5': { left: 620, top: 200 },
   'House feeder 6': { left: 770, top: 200 },
   'House feeder 7': { left: 910, top: 200 },
-  'P1': { left: 770, top: 20 },
-  'P1 Discard': { left: 910, top: 20 },
+  'P1': { left: 910, top: 20 },
+  'P1 Discard': { left: 770, top: 20 },
   'Suit Pile 1': { left: 20, top: 20 },
   'Suit Pile 2': { left: 170, top: 20 },
   'Suit Pile 3': { left: 320, top: 20 },
@@ -51,8 +51,8 @@ export class GameBoard extends React.Component<IGameBoardProps, IGameBoardState>
       }
       const coords = deckCoords[deck.getName()] || { left: 0, top: 0 };
       const childDeck = stackedDecksMap.get(deck.getName());
-      const selectCard = (card: Card) => this.executeNonMoveAction(deck, card);
-      const selectChildCard = (card: Card) => this.executeNonMoveAction(childDeck!, card);
+      const selectCard = (card: Card) => this.executeTapAction(deck, card);
+      const selectChildCard = (card: Card) => this.executeTapAction(childDeck!, card);
       const startDrag = (moveInProgress: MoveInProgress) => this.setState({ moveInProgress });
       const endDrag = (targetDeck: Deck) => this.executeMoveAction(targetDeck);
       const childDeckOffset = Math.min(10, deck.getCards().length);
@@ -90,8 +90,9 @@ export class GameBoard extends React.Component<IGameBoardProps, IGameBoardState>
     }
   }
 
-  private executeNonMoveAction(targetDeck: Deck, targetCard: Card) {
-    const action = this.props.legalActions.filter(a => !(a.getType() === ActionType.MOVE))
+  private executeTapAction(targetDeck: Deck, targetCard: Card) {
+    const action = this.props.legalActions
+      .filter(a => (a.getType() === ActionType.TAP || a.getType() === ActionType.FLIP))
       .find(a => a.getSourceDeckName() === targetDeck.getName());
     if (action) {
       this.props.executeAction(action);

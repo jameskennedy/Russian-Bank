@@ -2,7 +2,8 @@ import GameState from "../GameState";
 
 export enum ActionType {
   MOVE = 'move',
-  FLIP = 'flip'
+  FLIP = 'Flip',
+  TAP = 'Tap'
 }
 
 export class Action {
