@@ -1,5 +1,5 @@
-import Deck from '../Deck';
-import GameState from '../GameState';
+import Deck from '../objects/Deck';
+import GameState from '../objects/GameState';
 import { ActionType } from './Action';
 import Move from './Move';
 

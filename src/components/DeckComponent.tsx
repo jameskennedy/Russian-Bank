@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Action, { ActionType } from '../engine/objects/actions/Action';
+import Action, { ActionType } from '../engine/actions/Action';
 import Card from '../engine/objects/Card';
 import { Deck, DeckMode } from '../engine/objects/Deck';
 import MoveInProgress from '../models/MoveInProgress';

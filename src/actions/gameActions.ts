@@ -1,4 +1,4 @@
-import Action from "../engine/objects/actions/Action";
+import Action from "../engine/actions/Action";
 
 export const EXECUTE_ACTION = 'EXECUTE_ACTION';
 

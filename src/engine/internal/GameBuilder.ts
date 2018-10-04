@@ -1,4 +1,4 @@
-import Action from '../objects/actions/Action';
+import Action from '../actions/Action';
 import Card from '../objects/Card';
 import CardSuit from '../objects/CardSuit';
 import { Deck, DeckMode } from '../objects/Deck';

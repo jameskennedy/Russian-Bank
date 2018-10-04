@@ -1,7 +1,7 @@
-import Action from '../engine/objects/actions/Action';
+import Action from './actions/Action';
+import FlipTopCard from './actions/FlipTopCard';
+import Move from './actions/Move';
 import RuleEngine from './internal/RuleEngine';
-import FlipTopCard from './objects/actions/FlipTopCard';
-import Move from './objects/actions/Move';
 import Deck, { DeckMode } from './objects/Deck';
 import Game from './objects/Game';
 import GameState from './objects/GameState';

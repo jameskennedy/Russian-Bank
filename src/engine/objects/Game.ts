@@ -1,5 +1,5 @@
+import Action from '../actions/Action';
 import Rule from '../rules/Rule'
-import Action from './actions/Action';
 import GameState from "./GameState";
 
 class Game {

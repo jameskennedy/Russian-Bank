@@ -1,5 +1,5 @@
-import Action, { ActionType } from '../../objects/actions/Action';
-import Move from '../../objects/actions/Move';
+import Action, { ActionType } from '../../actions/Action';
+import Move from '../../actions/Move';
 import GameState from '../../objects/GameState';
 import Rule from '../Rule';
 

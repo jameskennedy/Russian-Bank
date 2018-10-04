@@ -1,6 +1,6 @@
 import * as React from 'react';
-import Action, { ActionType } from '../engine/objects/actions/Action';
-import Move from '../engine/objects/actions/Move';
+import Action, { ActionType } from '../engine/actions/Action';
+import Move from '../engine/actions/Move';
 import Card from '../engine/objects/Card';
 import Deck from '../engine/objects/Deck';
 import GameState from '../engine/objects/GameState';

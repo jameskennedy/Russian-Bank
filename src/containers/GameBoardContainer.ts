@@ -4,8 +4,8 @@ import {
 import { Dispatch } from 'redux';
 import { executeAction } from '../actions/gameActions';
 import GameBoard from '../components/GameBoard';
+import Action from '../engine/actions/Action';
 import GameFactory from '../engine/GameFactory';
-import Action from '../engine/objects/actions/Action';
 import GameState from '../engine/objects/GameState';
 import { IStore } from '../reducers';
 

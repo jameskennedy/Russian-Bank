@@ -1,6 +1,6 @@
-import Card from '../Card';
-import Deck from '../Deck';
-import GameState from '../GameState';
+import Card from '../objects/Card';
+import Deck from '../objects/Deck';
+import GameState from '../objects/GameState';
 import { Action, ActionType } from './Action';
 
 class Move extends Action {

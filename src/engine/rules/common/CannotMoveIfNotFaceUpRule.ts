@@ -1,4 +1,4 @@
-import Action, { ActionType } from '../../objects/actions/Action';
+import Action, { ActionType } from '../../actions/Action';
 import GameState from '../../objects/GameState';
 import Rule from '../Rule';
 

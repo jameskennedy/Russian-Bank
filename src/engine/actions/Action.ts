@@ -1,4 +1,4 @@
-import GameState from "../GameState";
+import GameState from "../objects/GameState";
 
 export enum ActionType {
   MOVE = 'move',

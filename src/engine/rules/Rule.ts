@@ -1,4 +1,4 @@
-import Action from '../objects/actions/Action';
+import Action from '../actions/Action';
 import Deck from '../objects/Deck';
 import GameState from '../objects/GameState';
 

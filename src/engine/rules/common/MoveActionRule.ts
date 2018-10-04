@@ -1,5 +1,5 @@
-import Action from '../../objects/actions/Action';
-import Move from '../../objects/actions/Move';
+import Action from '../../actions/Action';
+import Move from '../../actions/Move';
 import Deck from '../../objects/Deck';
 import GameState from '../../objects/GameState';
 import Rule from '../Rule';
