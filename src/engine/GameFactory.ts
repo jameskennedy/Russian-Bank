@@ -5,31 +5,33 @@ import Move from './objects/actions/Move';
 import TapDeck from './objects/actions/TapDeck';
 import Game from './objects/Game';
 import LimitMoveSourceRule from './rules/common/LimitMoveSourceRule';
+import LimitMoveTargetRule from './rules/common/LimitMoveTargetRule';
 import SameSuitIncreasingRankRule from './rules/common/SameSuitIncreasingRankRule';
 
 class GameFactory {
   private activeGames: Game[] = [];
 
   public startSolitaireGame() {
-    const builder = new GameBuilder().addStandardCardDeck('P1')
-      .addTopCardDeck('P1:top', 'P1')
-      .addRule(new LimitMoveSourceRule(['P1'], ['P1:top']))
-      .addDiscardDeck('P1 Discard')
-      .addRule(new LimitMoveSourceRule(['P1:top'], ['P1 Discard']))
-      .addAction(new TapDeck('P1:top', new Move('P1:top', 'P1 Discard', 'top')))
-      .addAction(new FlipDeck('P1 Discard', 'P1'))
-      .addDiscardDeck('Suit Pile 1')
-      .addDiscardDeck('Suit Pile 2')
-      .addDiscardDeck('Suit Pile 3')
-      .addDiscardDeck('Suit Pile 4')
-      .addRule(new SameSuitIncreasingRankRule(['Suit Pile 1', 'Suit Pile 2', 'Suit Pile 3', 'Suit Pile 4']));
+    const builder = new GameBuilder().addStandardCardDeck('Stock')
+      .addTopCardDeck('Stock:top', 'Stock')
+      .addRule(new LimitMoveSourceRule(['Stock'], ['Stock:top']))
+      .addDiscardDeck('Waste')
+      .addRule(new LimitMoveSourceRule(['Stock:top'], ['Waste']))
+      .addAction(new TapDeck('Stock:top', new Move('Stock:top', 'Waste', 'top')))
+      .addAction(new FlipDeck('Waste', 'Stock'))
+      .addDiscardDeck('Foundation 1')
+      .addDiscardDeck('Foundation 2')
+      .addDiscardDeck('Foundation 3')
+      .addDiscardDeck('Foundation 4')
+      .addRule(new LimitMoveTargetRule(['Foundation 1', 'Foundation 2', 'Foundation 3', 'Foundation 4'], ['Foundation 1', 'Foundation 2', 'Foundation 3', 'Foundation 4']))
+      .addRule(new SameSuitIncreasingRankRule(['Foundation 1', 'Foundation 2', 'Foundation 3', 'Foundation 4']));
     for (let i = 1; i <= 7; i++) {
       builder.addRedBlackDescendingDeck('House ' + i)
         .addEmptyFaceDownDeck('House feeder ' + i)
         .stackDeckOnTopOf('House ' + i, 'House feeder ' + i);
     }
     builder.dealCards((gameState) => {
-      const mainDeck = gameState.getDeck('P1');
+      const mainDeck = gameState.getDeck('Stock');
       for (let i = 1; i <= 7; i++) {
         let houseDeck = gameState.getDeck('House feeder ' + i);
         for (let j = 1; j <= (7 - i); j++) {

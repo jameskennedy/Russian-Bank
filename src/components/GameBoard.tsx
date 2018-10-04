@@ -18,6 +18,10 @@ interface IGameBoardState {
 }
 
 const deckCoords = {
+  'Foundation 1': { left: 20, top: 20 },
+  'Foundation 2': { left: 170, top: 20 },
+  'Foundation 3': { left: 320, top: 20 },
+  'Foundation 4': { left: 470, top: 20 },
   'House feeder 1': { left: 20, top: 200 },
   'House feeder 2': { left: 170, top: 200 },
   'House feeder 3': { left: 320, top: 200 },
@@ -25,12 +29,8 @@ const deckCoords = {
   'House feeder 5': { left: 620, top: 200 },
   'House feeder 6': { left: 770, top: 200 },
   'House feeder 7': { left: 910, top: 200 },
-  'P1': { left: 910, top: 20 },
-  'P1 Discard': { left: 770, top: 20 },
-  'Suit Pile 1': { left: 20, top: 20 },
-  'Suit Pile 2': { left: 170, top: 20 },
-  'Suit Pile 3': { left: 320, top: 20 },
-  'Suit Pile 4': { left: 470, top: 20 }
+  'Stock': { left: 910, top: 20 },
+  'Waste': { left: 770, top: 20 }
 }
 
 export class GameBoard extends React.Component<IGameBoardProps, IGameBoardState>  {
