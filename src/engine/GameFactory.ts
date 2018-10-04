@@ -4,6 +4,7 @@ import TapDeck from './actions/TapDeck';
 import GameService from './GameService';
 import GameBuilder from './internal/GameBuilder';
 import Game from './objects/Game';
+import AllowedCardsRule from './rules/common/AllowedCardsRule';
 import LimitMoveSourceRule from './rules/common/LimitMoveSourceRule';
 import LimitMoveTargetRule from './rules/common/LimitMoveTargetRule';
 import SameSuitIncreasingRankRule from './rules/common/SameSuitIncreasingRankRule';
@@ -28,7 +29,8 @@ class GameFactory {
     for (let i = 1; i <= 7; i++) {
       builder.addRedBlackDescendingDeck('House ' + i)
         .addEmptyFaceDownDeck('House feeder ' + i)
-        .stackDeckOnTopOf('House ' + i, 'House feeder ' + i);
+        .stackDeckOnTopOf('House ' + i, 'House feeder ' + i)
+        .addRule(new AllowedCardsRule('House feeder ' + i, (card => card.getRank() === 13)));
     }
     builder.dealCards((gameState) => {
       const mainDeck = gameState.getDeck('Stock');
