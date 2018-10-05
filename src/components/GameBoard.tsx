@@ -57,7 +57,7 @@ export class GameBoard extends React.Component<IGameBoardProps, IGameBoardState>
       const endDrag = (targetDeck: Deck) => this.executeMoveAction(targetDeck);
       const childDeckOffset = Math.min(10, deck.getCards().length);
       return (
-        <DeckComponent key={index++} deck={deck} left={coords.left} top={coords.top}
+        <DeckComponent key={index++} deck={deck} childDeck={childDeck} left={coords.left} top={coords.top}
           legalActions={this.getLegalActionsForDeck(deck)}
           selectCard={selectCard}
           handleBeginDragDrop={startDrag}

@@ -7,6 +7,7 @@ import CardComponent from './CardComponent';
 
 export interface IDeckProps {
   deck: Deck;
+  childDeck?: Deck;
   left: number;
   top: number;
   legalActions: Action[];
@@ -33,7 +34,7 @@ class DeckComponent extends React.PureComponent<IDeckProps> {
       cardComponents = this.createStackedCardComponents(cards);
     }
 
-    const emptyClass = cards.length <= 0 ? 'empty' : '';
+    const emptyClass = cards.length <= 0 && (!this.props.childDeck || this.props.childDeck.getCards().length === 0) ? 'empty' : '';
     const actionableClass = this.props.legalActions.length === 0 ? '' : 'actionable';
     const onDragDrop = (ev: React.DragEvent) => this.props.handleEndDragDrop(deck);
     const onDragOver = (ev: React.DragEvent) => ev.preventDefault();
