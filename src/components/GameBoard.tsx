@@ -17,22 +17,6 @@ interface IGameBoardState {
   moveInProgress: MoveInProgress
 }
 
-const deckCoords = {
-  'Foundation 1': { left: 20, top: 20 },
-  'Foundation 2': { left: 170, top: 20 },
-  'Foundation 3': { left: 320, top: 20 },
-  'Foundation 4': { left: 470, top: 20 },
-  'House feeder 1': { left: 20, top: 200 },
-  'House feeder 2': { left: 170, top: 200 },
-  'House feeder 3': { left: 320, top: 200 },
-  'House feeder 4': { left: 470, top: 200 },
-  'House feeder 5': { left: 620, top: 200 },
-  'House feeder 6': { left: 770, top: 200 },
-  'House feeder 7': { left: 910, top: 200 },
-  'Stock': { left: 910, top: 20 },
-  'Waste': { left: 770, top: 20 }
-}
-
 export class GameBoard extends React.Component<IGameBoardProps, IGameBoardState>  {
 
   public render() {
@@ -49,15 +33,16 @@ export class GameBoard extends React.Component<IGameBoardProps, IGameBoardState>
       if (deck.getStackedOnDeck()) {
         return undefined;
       }
-      const coords = deckCoords[deck.getName()] || { left: 0, top: 0 };
       const childDeck = stackedDecksMap.get(deck.getName());
       const selectCard = (card: Card) => this.executeTapAction(deck, card);
       const selectChildCard = (card: Card) => this.executeTapAction(childDeck!, card);
       const startDrag = (moveInProgress: MoveInProgress) => this.setState({ moveInProgress });
       const endDrag = (targetDeck: Deck) => this.executeMoveAction(targetDeck);
       const childDeckOffset = Math.min(10, deck.getCards().length);
+      const left = deck.getPositionX() * 150 + 20;
+      const top = deck.getPositionY() * 200 + 20;
       return (
-        <DeckComponent key={index++} deck={deck} childDeck={childDeck} left={coords.left} top={coords.top}
+        <DeckComponent key={index++} deck={deck} childDeck={childDeck} left={left} top={top}
           legalActions={this.getLegalActionsForDeck(deck)}
           selectCard={selectCard}
           handleBeginDragDrop={startDrag}

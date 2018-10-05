@@ -17,7 +17,7 @@ class GameBuilder {
   private actions: Action[] = [];
   private deal?: (gameState: GameState) => void;
 
-  public addStandardCardDeck(name: string): GameBuilder {
+  public addStandardCardDeck(name: string, x: number, y: number): GameBuilder {
     const cards = [];
     for (let i = 1; i <= 13; i += 1) {
       cards.push(new Card(i, CardSuit.HEARTS, false));
@@ -26,29 +26,37 @@ class GameBuilder {
       cards.push(new Card(i, CardSuit.CLUBS, false));
     }
     const deck = new Deck(name, DeckMode.FACE_DOWN, cards, false);
+    deck.setPosition(x, y);
     deck.shuffle();
     this.decks.push(deck);
     return this;
   }
 
-  public addEmptyFaceDownDeck(name: string) {
+  public addEmptyFaceDownDeck(name: string, x: number, y: number) {
     const deck = new Deck(name, DeckMode.FACE_DOWN, [], true);
+    deck.setPosition(x, y);
     this.decks.push(deck);
     return this;
   }
 
-  public addDiscardDeck(name: string): GameBuilder {
-    this.decks.push(new Deck(name, DeckMode.FACE_UP, [], true));
+  public addDiscardDeck(name: string, x: number, y: number): GameBuilder {
+    const deck = new Deck(name, DeckMode.FACE_UP, [], true);
+    deck.setPosition(x, y);
+    this.decks.push(deck);
     return this;
   }
 
-  public addHandDeck(name: string): GameBuilder {
-    this.decks.push(new Deck(name, DeckMode.FAN_UP, [], true));
+  public addHandDeck(name: string, x: number, y: number): GameBuilder {
+    const deck = new Deck(name, DeckMode.FAN_UP, [], true);
+    deck.setPosition(x, y);
+    this.decks.push(deck);
     return this;
   }
 
-  public addRedBlackDescendingDeck(name: string): GameBuilder {
-    this.decks.push(new Deck(name, DeckMode.SPREAD_DOWN, [], true));
+  public addRedBlackDescendingDeck(name: string, x: number, y: number): GameBuilder {
+    const deck = new Deck(name, DeckMode.SPREAD_DOWN, [], true);
+    this.decks.push(deck);
+    deck.setPosition(x, y);
     this.addRule(new RedBlackDescendingRule([name]));
     return this;
   }

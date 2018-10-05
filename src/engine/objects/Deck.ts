@@ -11,10 +11,11 @@ export enum DeckMode {
 
 export class Deck {
   private stackedOnDeck?: Deck;
+  private positionX: number;
+  private positionY: number;
   constructor(private name: string, private mode: DeckMode, private cards: Card[], private acceptsNewCards?: boolean) {
     this.setDeckMode(mode);
   }
-
 
   public getName(): string {
     return this.name;
@@ -98,12 +99,28 @@ export class Deck {
     return this.stackedOnDeck;
   }
 
-  public setStackedOnDeck(stackedOnDeck?: Deck) {
+  public setStackedOnDeck(stackedOnDeck: Deck) {
     this.stackedOnDeck = stackedOnDeck;
+    this.setPosition(stackedOnDeck.getPositionX(), stackedOnDeck.getPositionY());
   }
 
   public createCopy() {
-    return new Deck(this.name, this.mode, this.cards.map(c => c.createCopy()), this.acceptsNewCards);
+    const deck = new Deck(this.name, this.mode, this.cards.map(c => c.createCopy()), this.acceptsNewCards);
+    deck.setPosition(this.getPositionX(), this.getPositionY());
+    return deck;
+  }
+
+  public setPosition(x: number, y: number) {
+    this.positionX = x;
+    this.positionY = y;
+  }
+
+  public getPositionX() {
+    return this.positionX;
+  }
+
+  public getPositionY() {
+    return this.positionY;
   }
 
   public toString() {

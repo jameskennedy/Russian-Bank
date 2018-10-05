@@ -61,7 +61,9 @@ class GameState {
         const newDeck = oldNewMap.get(deck.getName());
         if (newDeck) {
           const newFlipToDeck = oldNewMap.get(oldFlipToDeck.getName());
-          newDeck.setStackedOnDeck(newFlipToDeck);
+          if (newFlipToDeck) {
+            newDeck.setStackedOnDeck(newFlipToDeck);
+          }
         }
       }
     });

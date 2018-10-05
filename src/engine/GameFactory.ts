@@ -13,22 +13,22 @@ class GameFactory {
   private activeGames: Game[] = [];
 
   public startSolitaireGame() {
-    const builder = new GameBuilder().addStandardCardDeck('Stock')
+    const builder = new GameBuilder().addStandardCardDeck('Stock', 6, 0)
       .addTopCardDeck('Stock:top', 'Stock')
       .addRule(new LimitMoveSourceRule(['Stock'], ['Stock:top']))
-      .addDiscardDeck('Waste')
+      .addDiscardDeck('Waste', 5, 0)
       .addRule(new LimitMoveSourceRule(['Stock:top'], ['Waste']))
       .addAction(new TapDeck('Stock:top', new Move('Stock:top', 'Waste', 'top')))
       .addAction(new FlipDeck('Waste', 'Stock'))
-      .addDiscardDeck('Foundation 1')
-      .addDiscardDeck('Foundation 2')
-      .addDiscardDeck('Foundation 3')
-      .addDiscardDeck('Foundation 4')
+      .addDiscardDeck('Foundation 1', 0, 0)
+      .addDiscardDeck('Foundation 2', 1, 0)
+      .addDiscardDeck('Foundation 3', 2, 0)
+      .addDiscardDeck('Foundation 4', 3, 0)
       .addRule(new LimitMoveTargetRule(['Foundation 1', 'Foundation 2', 'Foundation 3', 'Foundation 4'], ['Foundation 1', 'Foundation 2', 'Foundation 3', 'Foundation 4']))
       .addRule(new SameSuitIncreasingRankRule(['Foundation 1', 'Foundation 2', 'Foundation 3', 'Foundation 4']));
     for (let i = 1; i <= 7; i++) {
-      builder.addRedBlackDescendingDeck('House ' + i)
-        .addEmptyFaceDownDeck('House feeder ' + i)
+      builder.addRedBlackDescendingDeck('House ' + i, i - 1, 1)
+        .addEmptyFaceDownDeck('House feeder ' + i, i - 1, 1)
         .stackDeckOnTopOf('House ' + i, 'House feeder ' + i)
         .addRule(new AllowedCardsRule('House feeder ' + i, (card => card.getRank() === 13)));
     }
