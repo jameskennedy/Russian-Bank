@@ -4,17 +4,20 @@ import Move from '../engine/actions/Move';
 import Card from '../engine/objects/Card';
 import Deck from '../engine/objects/Deck';
 import GameState from '../engine/objects/GameState';
+import AIMoveInProgress from '../models/AIMoveInProgress';
 import MoveInProgress from '../models/MoveInProgress';
-import DeckComponent from './DeckComponent';
+import AnimatedDeckComponent from './AnimatedDeckComponent';
+import DeckComponent, { getCardOffsetX, getCardOffsetY } from './DeckComponent';
 
 interface IGameBoardProps {
   gameState: GameState;
   legalActions: Action[];
   executeAction: (action: Action) => void;
+  moveInProgress?: AIMoveInProgress;
 }
 
 interface IGameBoardState {
-  moveInProgress: MoveInProgress
+  dragInProgress?: MoveInProgress;
 }
 
 export class GameBoard extends React.Component<IGameBoardProps, IGameBoardState>  {
@@ -36,8 +39,8 @@ export class GameBoard extends React.Component<IGameBoardProps, IGameBoardState>
       const childDeck = stackedDecksMap.get(deck.getName());
       const selectCard = (card: Card) => this.executeTapAction(deck, card);
       const selectChildCard = (card: Card) => this.executeTapAction(childDeck!, card);
-      const startDrag = (moveInProgress: MoveInProgress) => this.setState({ moveInProgress });
-      const endDrag = (targetDeck: Deck) => this.executeMoveAction(targetDeck);
+      const startDrag = (dragInProgress: MoveInProgress) => this.setState({ dragInProgress });
+      const endDrag = (targetDeck: Deck) => this.executeMoveAction(targetDeck, this.state.dragInProgress);
       const childDeckOffset = Math.min(10, deck.getCards().length);
       const left = deck.getPositionX() * 150 + 20;
       const top = deck.getPositionY() * 200 + 20;
@@ -60,18 +63,20 @@ export class GameBoard extends React.Component<IGameBoardProps, IGameBoardState>
     return (
       <div className="game-board">
         {deckComponents}
+        {this.props.moveInProgress && this.renderAnimatedDeck(gameState)}
       </div>);
   }
 
-  private executeMoveAction(targetDeck: Deck) {
-    const moveInProgress = this.state.moveInProgress;
-    const sourceCard = moveInProgress.getTransferDeck().getCards()[0];
-    const moveAction = this.props.legalActions.filter(a => a instanceof Move).map(a => a as Move)
-      .find(a => a.getSourceDeckName() === moveInProgress.getSourceDeck()
-        && a.getTargetDeckName() === targetDeck.getName()
-        && (!a.getSourceCardName() || a.getSourceCardName() === sourceCard.getName()));
-    if (moveAction) {
-      this.props.executeAction(moveAction);
+  private executeMoveAction(targetDeck: Deck, moveInProgress?: MoveInProgress) {
+    if (moveInProgress) {
+      const sourceCard = moveInProgress.getTransferDeck().getCards()[0];
+      const moveAction = this.props.legalActions.filter(a => a instanceof Move).map(a => a as Move)
+        .find(a => a.getSourceDeckName() === moveInProgress.getSourceDeck()
+          && a.getTargetDeckName() === targetDeck.getName()
+          && (!a.getSourceCardName() || a.getSourceCardName() === sourceCard.getName()));
+      if (moveAction) {
+        this.props.executeAction(moveAction);
+      }
     }
   }
 
@@ -90,6 +95,45 @@ export class GameBoard extends React.Component<IGameBoardProps, IGameBoardState>
 
   private renderGameInactive() {
     return (<p>Game not started</p>);
+  }
+
+  private renderAnimatedDeck(gameState: GameState) {
+    if (this.props.moveInProgress) {
+      const move = this.props.moveInProgress;
+      const transferDeck = move.getTransferDeck();
+      const targetDeck = move.getTargetDeck()!;
+      const srcDeck = gameState.getDeck(move.getSourceDeck());
+      const srcDeckIndex = srcDeck.getCards().length - transferDeck.getCards().length;
+      const srcOffsetX = getCardOffsetX(srcDeck, srcDeckIndex)
+      const srcOffsetY = getCardOffsetY(srcDeck, srcDeckIndex);
+      const startX = this.getDeckCoordinateX(srcDeck.getPositionX()) + srcOffsetX;
+      const startY = this.getDeckCoordinateY(srcDeck.getPositionY()) + srcOffsetY;
+
+      let stopX = startX;
+      let stopY = startY;
+      if (targetDeck) {
+        const offsetX = getCardOffsetX(targetDeck);
+        const offsetY = getCardOffsetY(targetDeck);
+        stopX = this.getDeckCoordinateX(targetDeck.getPositionX()) + offsetX;
+        stopY = this.getDeckCoordinateY(targetDeck.getPositionY()) + offsetY;
+      }
+      const onComplete = () => this.props.executeAction(move.getAction());
+      return (
+        <AnimatedDeckComponent animationComplete={onComplete}
+          deck={transferDeck}
+          startLeft={startX} startTop={startY} endLeft={stopX} endTop={stopY}
+          secondsToComplete={1} />
+      )
+    }
+    return undefined;
+  }
+
+  private getDeckCoordinateX(position: number): number {
+    return position * 150 + 20;
+  }
+
+  private getDeckCoordinateY(position: number): number {
+    return position * 200 + 20;
   }
 }
 

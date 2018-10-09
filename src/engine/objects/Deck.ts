@@ -61,7 +61,7 @@ export class Deck {
     return Boolean(this.acceptsNewCards);
   }
 
-  public getTopCard() {
+  public getTopCard(): Card {
     return this.cards[this.cards.length - 1];
   }
 

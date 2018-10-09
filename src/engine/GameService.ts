@@ -1,6 +1,7 @@
 import Action from './actions/Action';
 import FlipTopCard from './actions/FlipTopCard';
 import Move from './actions/Move';
+import TapDeck from './actions/TapDeck';
 import RuleEngine from './internal/RuleEngine';
 import Deck, { DeckMode } from './objects/Deck';
 import Game from './objects/Game';
@@ -14,6 +15,10 @@ class GameService {
   public getCopyOfCurrentGameState() {
     const currentState = this.game.getCurrentGameState();
     return currentState.createCopy();
+  }
+
+  public getLegalAIActions(gameState: GameState = this.game.getCurrentGameState()): Action[] {
+    return this.getLegalActions().filter(a => !(a instanceof TapDeck));
   }
 
   public getLegalActions(gameState: GameState = this.game.getCurrentGameState()): Action[] {
@@ -48,10 +53,36 @@ class GameService {
       throw new Error(`Not a legal move: ${action}`);
     }
     const newState = this.getCopyOfCurrentGameState();
+    newState.setPreviousAction(action);
+    newState.setActionInProgress(undefined);
+
+    this.triggerBeforeActionEvents(newState);
     action.execute(newState);
+    this.triggerAfterActionEvents(newState);
     this.game.advanceState(newState);
-    console.debug(`*** Game step ${newState.getStateId()}: ${action} ***`);
+
+    this.startAIPlayerAction(newState);
+
     return this.game.getCurrentGameState();
+  }
+
+  public getPlayers() {
+    return [...this.game.getPlayers()];
+  }
+
+  private triggerBeforeActionEvents(gameState: GameState) {
+    this.game.getEvents().forEach(e => e.beforeAction(gameState));
+  }
+
+  private triggerAfterActionEvents(gameState: GameState) {
+    this.game.getEvents().forEach(e => e.afterAction(gameState));
+  }
+
+  private startAIPlayerAction(gameState: GameState) {
+    const ai = gameState.getPlayerTurn().getAI();
+    if (ai) {
+      gameState.setActionInProgress(ai.nextAction(this));
+    }
   }
 }
 

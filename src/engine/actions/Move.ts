@@ -8,7 +8,7 @@ class Move extends Action {
     super(ActionType.MOVE, sourceDeckName, sourceCardName);
   }
 
-  public isLegal(gameState: GameState) {
+  public isLegal(gameState: GameState): boolean {
     const targetDeck = this.getTargetDeck(gameState);
     return this.getSourceDeckName() !== this.targetDeckName
       && targetDeck.isAcceptingNewCards()
@@ -25,9 +25,10 @@ class Move extends Action {
     this.move(sourceDeck, targetDeck);
   }
 
-  public getTargetDeckName() {
+  public getTargetDeckName(): string {
     return this.targetDeckName;
   }
+
   public getSourceDeck(gameState: GameState): Deck {
     const sourceDeck = gameState.getDeck(this.getSourceDeckName());
     if (!sourceDeck) {
@@ -52,7 +53,7 @@ class Move extends Action {
     return sourceCard ? sourceDeck.getCardsToMoveWith(sourceCard) : [];
   }
 
-  public toString() {
+  public toString(): string {
     return `${super.toString()} ${this.getSourceCardName()} from ${this.getSourceDeckName() || 'no source'} to ${this.targetDeckName}`;
   }
 

@@ -1,9 +1,12 @@
 import FlipDeck from './actions/FlipDeck';
 import Move from './actions/Move';
 import TapDeck from './actions/TapDeck';
+import SingleActionTurnEvent from './events/SingleActionTurnEvent';
 import GameService from './GameService';
 import GameBuilder from './internal/GameBuilder';
 import Game from './objects/Game';
+import GameParameters from './objects/GameParameters';
+import AI from './players/AI';
 import AllowedCardsRule from './rules/common/AllowedCardsRule';
 import LimitMoveSourceRule from './rules/common/LimitMoveSourceRule';
 import LimitMoveTargetRule from './rules/common/LimitMoveTargetRule';
@@ -12,7 +15,7 @@ import SameSuitIncreasingRankRule from './rules/common/SameSuitIncreasingRankRul
 class GameFactory {
   private activeGames: Game[] = [];
 
-  public startSolitaireGame() {
+  public startSolitaireGame(gameParameters: GameParameters) {
     const builder = new GameBuilder().addStandardCardDeck('Stock', 6, 0)
       .addTopCardDeck('Stock:top', 'Stock')
       .addRule(new LimitMoveSourceRule(['Stock'], ['Stock:top']))
@@ -30,7 +33,8 @@ class GameFactory {
       builder.addRedBlackDescendingDeck('House ' + i, i - 1, 1)
         .addEmptyFaceDownDeck('House feeder ' + i, i - 1, 1)
         .stackDeckOnTopOf('House ' + i, 'House feeder ' + i)
-        .addRule(new AllowedCardsRule('House feeder ' + i, (card => card.getRank() === 13)));
+        .addRule(new AllowedCardsRule('House feeder ' + i, (card, targetDeck) => card.getRank() === 13 && targetDeck.isEmpty()))
+        .addRule(new AllowedCardsRule('House ' + i, (card, targetDeck) => card.getRank() === 13 || !targetDeck.isEmpty()));
     }
     builder.dealCards((gameState) => {
       const mainDeck = gameState.getDeck('Stock');
@@ -43,6 +47,11 @@ class GameFactory {
         houseDeck.pushCard(mainDeck.popCard()!);
       }
     })
+    builder.addPlayer('Player 1');
+    if (gameParameters.numberOfPlayers > 1) {
+      builder.addPlayer('Player 2', new AI());
+    }
+    builder.addEvent(new SingleActionTurnEvent());
     const game = builder.create(this.newUniqueGameId());
 
 
@@ -51,7 +60,7 @@ class GameFactory {
     return new GameService(game);
   }
 
-  public getGameService(gameId: number) {
+  public getGameService(gameId: number): GameService {
     const foundGame = this.activeGames.find(game => game.getGameId() === gameId);
     if (!foundGame) {
       throw new Error(`Could not find game with id ${gameId}`);

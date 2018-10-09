@@ -1,8 +1,10 @@
 import * as React from 'react';
+import AIConsoleContainer from '../containers/AIConsoleContainer';
 import GameBoardContainer from '../containers/GameBoardContainer';
 
 export interface IRussianBankProps {
-  newGame: () => void;
+  newSolitaire1Player: () => void;
+  newSolitaire2Player: () => void;
 }
 
 class RussianBank extends React.PureComponent<IRussianBankProps> {
@@ -14,10 +16,11 @@ class RussianBank extends React.PureComponent<IRussianBankProps> {
     return (
       <div>
         <div>
-          <button onClick={this.props.newGame}>New Game</button>
+          <button onClick={this.props.newSolitaire1Player}>Solitaire 1 player</button>
+          <button onClick={this.props.newSolitaire2Player}>Solitaire 2 player</button>
+          <AIConsoleContainer />
         </div>
         <GameBoardContainer />
-
       </div>);
   }
 }

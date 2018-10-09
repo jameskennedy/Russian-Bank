@@ -5,6 +5,10 @@ import { Deck, DeckMode } from '../engine/objects/Deck';
 import MoveInProgress from '../models/MoveInProgress';
 import CardComponent from './CardComponent';
 
+const VERTICAL_SPREAD = 35;
+
+const HORIZONTAL_SPREAD = 20;
+
 export interface IDeckProps {
   deck: Deck;
   childDeck?: Deck;
@@ -26,12 +30,10 @@ class DeckComponent extends React.PureComponent<IDeckProps> {
     const deck = this.props.deck;
     const cards = deck.getCards();
     let cardComponents = [];
-    if (deck.getMode() === DeckMode.FAN_UP) {
-      cardComponents = this.createFannedCardComponents(cards);
-    } else if (deck.getMode() === DeckMode.SPREAD_DOWN) {
-      cardComponents = this.createSpreadDownCardComponents(cards);
-    } else {
+    if (deck.getMode() === DeckMode.FACE_UP || deck.getMode() === DeckMode.FACE_DOWN) {
       cardComponents = this.createStackedCardComponents(cards);
+    } else {
+      cardComponents = this.createSpreadCardComponents(cards);
     }
 
     const emptyClass = cards.length <= 0 && (!this.props.childDeck || this.props.childDeck.getCards().length === 0) ? 'empty' : '';
@@ -46,28 +48,13 @@ class DeckComponent extends React.PureComponent<IDeckProps> {
       </div>);
   }
 
-  private createFannedCardComponents(cards: Card[]) {
+  private createSpreadCardComponents(cards: Card[]) {
+    const deck = this.props.deck;
     const components = [];
-    let voffset = 0;
     const isDraggable = this.deckCanBeMoveSource();
     for (let i = 0; i < cards.length; i += 1) {
       const startDrag = (card: Card) => this.handleBeginDragDrop([card]);
-      voffset += (i > cards.length / 2 ? 1 : -1)
-        * Math.abs((cards.length / 2) - i) * (20 / cards.length);
-      components.push(<CardComponent key={i} card={cards[i]} left={i * 30} top={voffset}
-        selectCard={this.props.selectCard}
-        isDraggable={isDraggable}
-        handleBeginDragDrop={startDrag} />);
-    }
-    return components;
-  }
-
-  private createSpreadDownCardComponents(cards: Card[]) {
-    const components = [];
-    const isDraggable = this.deckCanBeMoveSource();
-    for (let i = 0; i < cards.length; i += 1) {
-      const startDrag = (card: Card) => this.handleBeginDragDrop(cards.slice(i));
-      components.push(<CardComponent key={i} card={cards[i]} left={0} top={i * 35}
+      components.push(<CardComponent key={i} card={cards[i]} left={getCardOffsetX(deck, i)} top={getCardOffsetY(deck, i)}
         selectCard={this.props.selectCard}
         isDraggable={isDraggable}
         handleBeginDragDrop={startDrag} />);
@@ -81,8 +68,9 @@ class DeckComponent extends React.PureComponent<IDeckProps> {
     const components = [];
     const isDraggable = this.deckCanBeMoveSource();
     const startDrag = (card: Card) => this.handleBeginDragDrop([card]);
+    const deck = this.props.deck;
     for (let i = 0; i < cardsToRender.length; i += 1) {
-      components.push(<CardComponent key={i} left={i} top={i}
+      components.push(<CardComponent key={i} left={getCardOffsetX(deck, i)} top={getCardOffsetY(deck, i)}
         card={cardsToRender[i]}
         selectCard={this.props.selectCard}
         isDraggable={isDraggable}
@@ -99,6 +87,36 @@ class DeckComponent extends React.PureComponent<IDeckProps> {
     const transferDeck = new Deck('drag deck', DeckMode.FACE_UP, cards, false);
     this.props.handleBeginDragDrop(new MoveInProgress(this.props.deck.getName(), transferDeck));
   }
+}
+
+export const getCardOffsetX = (deck: Deck, cardIndex?: number) => {
+  const mode = deck.getMode();
+  const index = cardIndex === undefined ? deck.getCards().length : cardIndex;
+  if (mode === DeckMode.SPREAD_RIGHT) {
+    return index * HORIZONTAL_SPREAD;
+  }
+  if (mode === DeckMode.SPREAD_LEFT) {
+    return index * HORIZONTAL_SPREAD * -1;
+  }
+  return index;
+}
+
+export const getCardOffsetY = (deck: Deck, cardIndex?: number) => {
+  const mode = deck.getMode();
+  const numCards = deck.getCards().length;
+  const index = cardIndex === undefined ? numCards : cardIndex;
+  if (mode === DeckMode.SPREAD_DOWN) {
+    return index * VERTICAL_SPREAD;
+  }
+  if (mode === DeckMode.FAN_UP) {
+    let offset = 0;
+    for (let i = 0; i <= index; i++) {
+      offset += (i > numCards / 2 ? 1 : -1)
+        * Math.abs((numCards / 2) - i) * (20 / numCards);
+    }
+    return offset;
+  }
+  return index;
 }
 
 export default DeckComponent;

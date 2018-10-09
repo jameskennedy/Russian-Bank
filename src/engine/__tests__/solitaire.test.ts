@@ -1,8 +1,9 @@
 import GameFactory from '../GameFactory';
+import GameParameters from '../objects/GameParameters';
 import GameState from '../objects/GameState';
 
 
-const gameService = GameFactory.startSolitaireGame();
+const gameService = GameFactory.startSolitaireGame(new GameParameters(1));
 const initialGameState = gameService.getCopyOfCurrentGameState();
 
 function expectCardCount(deck: string, expectedCardCount: number, gameState: GameState = initialGameState) {

@@ -1,7 +1,12 @@
+import Action from "../actions/Action";
+import Player from "../players/Player";
 import Deck from "./Deck";
 
 class GameState {
-  constructor(public gameId: number, private id: number, private decks: Deck[]) {
+  private actionInProgress?: Action;
+  private playerTurn: Player;
+
+  constructor(public gameId: Readonly<number>, private id: number, private previousAction: Action, private decks: Deck[]) {
     this.decks = decks.slice();
   }
 
@@ -34,6 +39,30 @@ class GameState {
     }, new Map<string, Deck>());
   }
 
+  public setActionInProgress(action?: Action) {
+    this.actionInProgress = action;
+  }
+
+  public getActionInProgress(): Action | undefined {
+    return this.actionInProgress;
+  }
+
+  public setPreviousAction(action: Action) {
+    this.previousAction = action;
+  }
+
+  public getPreviousAction(): Action {
+    return this.previousAction;
+  }
+
+  public getPlayerTurn(): Player {
+    return this.playerTurn;
+  }
+
+  public setPlayerTurn(player: Player) {
+    this.playerTurn = player;
+  }
+
   public createCopy(): GameState {
     const id = this.getStateId() + 1;
     const oldNewMap = this.getDecks().reduce((map, oldDeck) => {
@@ -43,7 +72,11 @@ class GameState {
 
     const decks = Array.from(oldNewMap.values());
     this.copyDeckReferences(oldNewMap);
-    return new GameState(this.gameId, id, decks);
+    const newState = new GameState(this.gameId, id, this.previousAction, decks);
+    newState.setPlayerTurn(this.getPlayerTurn());
+    newState.setActionInProgress(this.getActionInProgress());
+    newState.previousAction = this.previousAction;
+    return newState;
   }
 
   public toString(): string {

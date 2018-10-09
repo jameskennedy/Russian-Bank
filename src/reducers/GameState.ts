@@ -12,7 +12,7 @@ let gameService: GameService;
 export const gameState = (state: any = null, action: any) => {
   switch (action.type) {
     case START_GAME:
-      gameService = GameFactory.startSolitaireGame();
+      gameService = GameFactory.startSolitaireGame(action.gameParameters);
       return gameService.getCopyOfCurrentGameState();
     case EXECUTE_ACTION:
       return gameService.executeAction(action.action);

@@ -1,9 +1,12 @@
-import Action from '../actions/Action';
+import Action, { ActionType } from '../actions/Action';
+import GameEvent from '../events/GameEvent';
 import Card from '../objects/Card';
 import CardSuit from '../objects/CardSuit';
 import { Deck, DeckMode } from '../objects/Deck';
 import Game from '../objects/Game';
 import GameState from '../objects/GameState';
+import AI from '../players/AI';
+import Player from '../players/Player';
 import CannotMoveIfNotFaceUp from '../rules/common/CannotMoveIfNotFaceUpRule';
 import LimitMoveSourceRule from '../rules/common/LimitMoveSourceRule';
 import MaxDeckSizeRule from '../rules/common/MaxDeckSizeRule';
@@ -15,6 +18,8 @@ class GameBuilder {
   private decks: Deck[] = [];
   private rules: Rule[] = this.createStandardRules();
   private actions: Action[] = [];
+  private players: Player[] = [];
+  private events: GameEvent[] = [];
   private deal?: (gameState: GameState) => void;
 
   public addStandardCardDeck(name: string, x: number, y: number): GameBuilder {
@@ -90,17 +95,32 @@ class GameBuilder {
     return this;
   }
 
+  public addEvent(event: GameEvent): GameBuilder {
+    this.events.push(event);
+    return this;
+  }
+
+  public addPlayer(name: string, ai?: AI): GameBuilder {
+    const player = new Player(name, ai);
+    this.players.push(player);
+    return this;
+  }
+
   public dealCards(deal: (gameState: GameState) => void): GameBuilder {
     this.deal = deal;
     return this;
   }
 
   public create(gameId: number): Game {
-    const initialState = new GameState(gameId, 0, this.decks);
+    const initialState = new GameState(gameId, 0, new Action(ActionType.GAME_START, ''), this.decks);
     if (this.deal) {
       this.deal(initialState);
     }
-    return new Game(initialState.getGameId(), initialState, [...this.rules], [...this.actions]);
+    if (this.players.length === 0) {
+      throw new Error("Game has no players defined");
+    }
+    initialState.setPlayerTurn(this.players[0]);
+    return new Game(initialState.getGameId(), initialState, [...this.rules], [...this.actions], [...this.players], [...this.events]);
   }
 
   private getDeck(name: string) {

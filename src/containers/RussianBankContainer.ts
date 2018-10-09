@@ -2,10 +2,12 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { startGame } from '../actions/gameMenuActions';
 import RussianBank from '../components/RussianBank';
+import GameParameters from '../engine/objects/GameParameters';
 import { IStore } from '../reducers';
 
 interface IDispatchFromProps {
-  newGame: (gameSetupParams: any) => void;
+  newSolitaire1Player: () => void;
+  newSolitaire2Player: () => void;
 }
 
 const mapStateToProps = (state: IStore) => {
@@ -16,8 +18,11 @@ const mapStateToProps = (state: IStore) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    newGame: () => {
-      dispatch(startGame());
+    newSolitaire1Player: () => {
+      dispatch(startGame(new GameParameters(1)));
+    },
+    newSolitaire2Player: () => {
+      dispatch(startGame(new GameParameters(2)));
     }
   };
 
