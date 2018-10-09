@@ -20,13 +20,13 @@ export interface IAnimatedDeckComponentState {
   left: number;
   top: number;
   step: number;
-  lastStep: number;
+  maxSteps: number;
 }
 
 class AnimatedDeckComponent extends React.Component<IAnimatedDeckComponentProps, IAnimatedDeckComponentState> {
   constructor(props: IAnimatedDeckComponentProps) {
     super(props);
-    this.state = { left: this.props.startLeft, top: this.props.startTop, step: 0, lastStep: this.props.secondsToComplete * FPS };
+    this.state = { left: this.props.startLeft, top: this.props.startTop, step: 0, maxSteps: this.props.secondsToComplete * FPS };
   }
 
   public componentDidMount() {
@@ -74,12 +74,12 @@ class AnimatedDeckComponent extends React.Component<IAnimatedDeckComponentProps,
 
   private animationStep() {
     const step = this.state.step;
-    if (step > this.state.lastStep) {
+    if (step > this.state.maxSteps) {
       this.stopAnimation();
       this.props.animationComplete();
       return;
     }
-    const variance = this.state.lastStep;
+    const variance = this.state.maxSteps;
     const distanceProgress = gaussian(0, variance).cdf(step - variance / 2);
     const left = ((this.props.endLeft - this.props.startLeft) * distanceProgress) + this.props.startLeft;
     const top = ((this.props.endTop - this.props.startTop) * distanceProgress) + this.props.startTop;
