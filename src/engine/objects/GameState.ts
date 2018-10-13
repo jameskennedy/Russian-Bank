@@ -2,9 +2,15 @@ import Action from "../actions/Action";
 import Player from "../players/Player";
 import Deck from "./Deck";
 
+export enum GameStatus {
+  IN_PLAY = "IN_PLAY",
+  FINISHED = "FINISHED"
+}
+
 class GameState {
   private actionInProgress?: Action;
   private playerTurn: Player;
+  private status: GameStatus = GameStatus.IN_PLAY;
 
   constructor(public gameId: Readonly<number>, private id: number, private previousAction: Action, private decks: Deck[]) {
     this.decks = decks.slice();
@@ -14,8 +20,16 @@ class GameState {
     return this.id;
   }
 
-  public getGameId() {
+  public getGameId(): number {
     return this.gameId;
+  }
+
+  public getStatus(): GameStatus {
+    return this.status;
+  }
+
+  public setStatus(status: GameStatus) {
+    this.status = status;
   }
 
   public getDecks() {
@@ -76,7 +90,15 @@ class GameState {
     newState.setPlayerTurn(this.getPlayerTurn());
     newState.setActionInProgress(this.getActionInProgress());
     newState.previousAction = this.previousAction;
+    newState.status = this.status;
     return newState;
+  }
+
+  public getVictoryMessage(): string {
+    if (this.status === GameStatus.FINISHED) {
+      return `${this.playerTurn.getName()} wins!`;
+    }
+    return "Game in progress";
   }
 
   public toString(): string {

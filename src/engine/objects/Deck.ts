@@ -1,3 +1,4 @@
+import Player from '../players/Player';
 import Card from './Card';
 
 export enum DeckMode {
@@ -13,12 +14,22 @@ export class Deck {
   private stackedOnDeck?: Deck;
   private positionX: number;
   private positionY: number;
+  private owner: Player;
+
   constructor(private name: string, private mode: DeckMode, private cards: Card[], private acceptsNewCards?: boolean) {
     this.setDeckMode(mode);
   }
 
   public getName(): string {
     return this.name;
+  }
+
+  public setOwner(owner: Player) {
+    this.owner = owner;
+  }
+
+  public getOwner(): Player {
+    return this.owner;
   }
 
   public getCards(): Card[] {
@@ -107,6 +118,7 @@ export class Deck {
   public createCopy() {
     const deck = new Deck(this.name, this.mode, this.cards.map(c => c.createCopy()), this.acceptsNewCards);
     deck.setPosition(this.getPositionX(), this.getPositionY());
+    deck.setOwner(this.getOwner());
     return deck;
   }
 

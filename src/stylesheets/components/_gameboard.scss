@@ -5,3 +5,17 @@
   min-height: 800px;
   position: relative;
 }
+
+.game-board.finished {
+  -webkit-filter: grayscale(100%);
+  /* Safari 6.0 - 9.0 */
+  filter: grayscale(100%);
+}
+
+.game-board .victory-message {
+  color: #00bcd4;
+  font-size: 40pt;
+  position: relative;
+  left: 40px;
+  top: 60px;
+}

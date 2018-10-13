@@ -63,13 +63,16 @@ class AnimatedDeckComponent extends React.Component<IAnimatedDeckComponentProps,
   }
 
   private startAnimation() {
+    this.stopAnimation();
     const timer = setInterval(() => this.animationStep(), 1000 / FPS);
     this.setState({ animationTimer: timer, step: 0 });
   }
 
   private stopAnimation() {
-    clearInterval(this.state.animationTimer as NodeJS.Timer);
-    this.setState({ animationTimer: undefined });
+    if (this.state.animationTimer) {
+      clearInterval(this.state.animationTimer as NodeJS.Timer);
+      this.setState({ animationTimer: undefined });
+    }
   }
 
   private animationStep() {

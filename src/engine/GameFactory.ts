@@ -1,6 +1,7 @@
 import FlipDeck from './actions/FlipDeck';
 import Move from './actions/Move';
 import TapDeck from './actions/TapDeck';
+import NoCardsLeftCondition from './events/NoCardsLeftCondition';
 import SingleActionTurnEvent from './events/SingleActionTurnEvent';
 import GameService from './GameService';
 import GameBuilder from './internal/GameBuilder';
@@ -47,11 +48,15 @@ class GameFactory {
         houseDeck.pushCard(mainDeck.popCard()!);
       }
     })
-    builder.addPlayer('Player 1');
+    builder.addPlayer('Player 1')
+      .assignDeck('Stock', 'Player 1')
+      .assignDeck('Stock:top', 'Player 1')
+      .assignDeck('Waste', 'Player 1')
     if (gameParameters.numberOfPlayers > 1) {
       builder.addPlayer('Player 2', new AI());
     }
     builder.addEvent(new SingleActionTurnEvent());
+    builder.addEvent(new NoCardsLeftCondition())
     const game = builder.create(this.newUniqueGameId());
 
 

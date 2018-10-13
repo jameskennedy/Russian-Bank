@@ -20,6 +20,7 @@ class GameBuilder {
   private actions: Action[] = [];
   private players: Player[] = [];
   private events: GameEvent[] = [];
+  private deckAssignments = {};
   private deal?: (gameState: GameState) => void;
 
   public addStandardCardDeck(name: string, x: number, y: number): GameBuilder {
@@ -106,6 +107,11 @@ class GameBuilder {
     return this;
   }
 
+  public assignDeck(deck: string, playerName: string): GameBuilder {
+    this.deckAssignments[deck] = playerName;
+    return this;
+  }
+
   public dealCards(deal: (gameState: GameState) => void): GameBuilder {
     this.deal = deal;
     return this;
@@ -119,8 +125,25 @@ class GameBuilder {
     if (this.players.length === 0) {
       throw new Error("Game has no players defined");
     }
+    this.assignDecksToPlayers();
     initialState.setPlayerTurn(this.players[0]);
     return new Game(initialState.getGameId(), initialState, [...this.rules], [...this.actions], [...this.players], [...this.events]);
+  }
+
+  private assignDecksToPlayers() {
+    for (const deckName in this.deckAssignments) {
+      if (this.deckAssignments.hasOwnProperty(deckName)) {
+        const deck = this.getDeck(deckName);
+        const playerName = this.deckAssignments[deckName];
+        const owner = this.players.find(p => p.getName() === playerName);
+        if (!owner) {
+          throw new Error(`Unknown player ${playerName} in deck assignment`);
+        }
+        deck.setOwner(owner)
+      } else {
+        throw new Error(`Unknown deck ${deckName} in deck assignment`);
+      }
+    }
   }
 
   private getDeck(name: string) {

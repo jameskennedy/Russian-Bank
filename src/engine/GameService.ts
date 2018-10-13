@@ -5,7 +5,7 @@ import TapDeck from './actions/TapDeck';
 import RuleEngine from './internal/RuleEngine';
 import Deck, { DeckMode } from './objects/Deck';
 import Game from './objects/Game';
-import GameState from './objects/GameState';
+import GameState, { GameStatus } from './objects/GameState';
 
 class GameService {
   private ruleEngine: RuleEngine = new RuleEngine(this.game);
@@ -22,6 +22,9 @@ class GameService {
   }
 
   public getLegalActions(gameState: GameState = this.game.getCurrentGameState()): Action[] {
+    if (gameState.getStatus() !== GameStatus.IN_PLAY) {
+      return [];
+    }
     const possibleActions: Action[] = this.game.getGameActions();
     const decks: Deck[] = gameState.getDecks();
     decks.forEach((sourceDeck) => {
@@ -61,7 +64,9 @@ class GameService {
     this.triggerAfterActionEvents(newState);
     this.game.advanceState(newState);
 
-    this.startAIPlayerAction(newState);
+    if (newState.getStatus() === GameStatus.IN_PLAY) {
+      this.startAIPlayerAction(newState);
+    }
 
     return this.game.getCurrentGameState();
   }
