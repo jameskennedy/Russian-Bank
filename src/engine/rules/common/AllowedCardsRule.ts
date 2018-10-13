@@ -17,7 +17,7 @@ class AllowedCardsRule extends Rule {
       const targetDeck = move.getTargetDeck(gameState);
       if (targetDeck.getName() === this.targetDeck && targetDeck.getStackedOnDeck() !== sourceDeck) {
         const sourceCards = move.getCardsToMove(gameState);
-        return sourceCards.length > 0 && sourceCards.filter(card => this.cardFilter(card, targetDeck)).length === sourceCards.length;
+        return sourceCards.length > 0 && this.cardFilter(sourceCards[0], targetDeck);
       }
     }
     return true;

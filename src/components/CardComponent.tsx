@@ -22,7 +22,7 @@ class CardComponent extends React.PureComponent<ICardProps> {
     const selectCard = () => this.props.selectCard(this.props.card);
     const onDrag = (e: React.DragEvent) => this.props.handleBeginDragDrop(this.props.card);
     return (
-      <div className={`card ${this.props.card.getSuit().getName()} ${faceUp ? 'face-up' : 'face-down'}`}
+      <div className={`card ${this.props.card.getSuit().getName()} ${faceUp ? 'face-up' : 'face-down'} ${this.props.card.getName()}`}
         draggable={this.props.isDraggable}
         onDragStart={onDrag}
         style={styles}
@@ -33,7 +33,7 @@ class CardComponent extends React.PureComponent<ICardProps> {
 
   private renderCardValue() {
     return (
-      <div>
+      <div className="card-text">
         <span>{this.props.card.toString()}</span>
         <span className="bottom-value">{this.props.card.toString()}</span>
       </div>

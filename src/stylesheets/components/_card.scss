@@ -19,6 +19,7 @@
 
 .card {
     background-color: white;
+    background-size: 1230px 781px;
     border: 1px solid black;
     padding: 3px;
     font-family: sans-serif;
@@ -57,4 +58,79 @@
 .card.Club,
 .card.Spade {
     color: black;
+}
+
+.card.J♣ .card-text,
+.card.Q♣ .card-text,
+.card.K♣ .card-text,
+.card.J♦ .card-text,
+.card.Q♦ .card-text,
+.card.K♦ .card-text,
+.card.J♥ .card-text,
+.card.Q♥ .card-text,
+.card.K♥ .card-text,
+.card.J♠ .card-text,
+.card.Q♠ .card-text,
+.card.K♠ .card-text {
+    display: none
+}
+
+.card.J♣.face-up {
+    background-image: url(#{'../images/cards.png'});
+    background-position: 284px 0px;
+}
+
+.card.Q♣.face-up {
+    background-image: url(#{'../images/cards.png'});
+    background-position: 189px 0px;
+}
+
+.card.K♣.face-up {
+    background-image: url(#{'../images/cards.png'});
+    background-position: 1325px 0px;
+}
+
+.card.J♦.face-up {
+    background-image: url(#{'../images/cards.png'});
+    background-position: 284px -157px;
+}
+
+.card.Q♦.face-up {
+    background-image: url(#{'../images/cards.png'});
+    background-position: 189px -157px;
+}
+
+.card.K♦.face-up {
+    background-image: url(#{'../images/cards.png'});
+    background-position: 1325px -157px;
+}
+
+.card.J♥.face-up {
+    background-image: url(#{'../images/cards.png'});
+    background-position: 284px -313px;
+}
+
+.card.Q♥.face-up {
+    background-image: url(#{'../images/cards.png'});
+    background-position: 189px -313px;
+}
+
+.card.K♥.face-up {
+    background-image: url(#{'../images/cards.png'});
+    background-position: 1325px -313px;
+}
+
+.card.J♠.face-up {
+    background-image: url(#{'../images/cards.png'});
+    background-position: 284px -469px;
+}
+
+.card.Q♠.face-up {
+    background-image: url(#{'../images/cards.png'});
+    background-position: 189px -469px;
+}
+
+.card.K♠.face-up {
+    background-image: url(#{'../images/cards.png'});
+    background-position: 1325px -469px;
 }
