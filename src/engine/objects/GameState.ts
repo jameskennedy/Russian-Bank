@@ -11,6 +11,7 @@ class GameState {
   private actionInProgress?: Action;
   private playerTurn: Player;
   private status: GameStatus = GameStatus.IN_PLAY;
+  private statusMessage: string = '';
 
   constructor(public gameId: Readonly<number>, private id: number, private previousAction: Action, private decks: Deck[]) {
     this.decks = decks.slice();
@@ -91,14 +92,16 @@ class GameState {
     newState.setActionInProgress(this.getActionInProgress());
     newState.previousAction = this.previousAction;
     newState.status = this.status;
+    newState.statusMessage = this.statusMessage;
     return newState;
   }
 
-  public getVictoryMessage(): string {
-    if (this.status === GameStatus.FINISHED) {
-      return `${this.playerTurn.getName()} wins!`;
-    }
-    return "Game in progress";
+  public getStatusMessage(): string {
+    return this.statusMessage || '';
+  }
+
+  public setStatusMessage(message: string) {
+    this.statusMessage = message;
   }
 
   public toString(): string {

@@ -128,6 +128,7 @@ class GameFactory {
     builder.addEvent(new EndTurnOnDiscardEvent('Waste2'));
     builder.addEvent(new NoCardsLeftCondition())
     const game = builder.create(this.newUniqueGameId());
+    game.getCurrentGameState().setStatusMessage('Player 1 go!');
 
     this.activeGames.push(game);
     return new GameService(game);

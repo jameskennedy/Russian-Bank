@@ -3,7 +3,7 @@ import Action, { ActionType } from '../engine/actions/Action';
 import Move from '../engine/actions/Move';
 import Card from '../engine/objects/Card';
 import Deck from '../engine/objects/Deck';
-import GameState, { GameStatus } from '../engine/objects/GameState';
+import GameState from '../engine/objects/GameState';
 import AIMoveInProgress from '../models/AIMoveInProgress';
 import MoveInProgress from '../models/MoveInProgress';
 import AnimatedDeckComponent from './AnimatedDeckComponent';
@@ -64,7 +64,7 @@ export class GameBoard extends React.Component<IGameBoardProps, IGameBoardState>
       <div className={`game-board ${gameState.getStatus().toLowerCase()}`}>
         {deckComponents}
         {this.props.moveInProgress && this.renderAnimatedDeck(gameState)}
-        {gameState.getStatus() === GameStatus.FINISHED && (<div className="victory-message">{gameState.getVictoryMessage()}</div>)}
+        <span className="status-message">{gameState.getStatusMessage()}</span>
       </div>);
   }
 

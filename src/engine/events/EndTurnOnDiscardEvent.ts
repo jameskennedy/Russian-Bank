@@ -34,6 +34,7 @@ class EndTurnOnDiscardEvent implements IGameEvent {
     const index = players.findIndex(p => p === gameState.getPlayerTurn());
     const nextPlayer = players[(index + 1) % players.length];
     gameState.setPlayerTurn(nextPlayer);
+    gameState.setStatusMessage(`${nextPlayer.getName()} go!`);
   }
 
 }

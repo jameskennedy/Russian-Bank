@@ -11,6 +11,7 @@ class NoCardsLeftCondition implements IGameEvent {
     const playerDecks = this.getDecksOwnedByCurrentPlayer(gameState);
     if (playerDecks.map(d => d.isEmpty()).reduce((a, b) => a && b, playerDecks.length > 0)) {
       gameState.setStatus(GameStatus.FINISHED);
+      gameState.setStatusMessage(`${gameState.getPlayerTurn().getName()} wins!`);
     }
   }
 

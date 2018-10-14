@@ -58,6 +58,7 @@ class GameService {
     const newState = this.getCopyOfCurrentGameState();
     newState.setPreviousAction(action);
     newState.setActionInProgress(undefined);
+    newState.setStatusMessage('');
 
     this.triggerBeforeActionEvents(newState, action);
     action.execute(newState);
