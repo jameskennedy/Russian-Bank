@@ -59,8 +59,8 @@ class GameBuilder {
     return this;
   }
 
-  public addRedBlackDescendingDeck(name: string, x: number, y: number): GameBuilder {
-    const deck = new Deck(name, DeckMode.SPREAD_DOWN, [], true);
+  public addRedBlackDescendingDeck(name: string, x: number, y: number, mode: DeckMode = DeckMode.SPREAD_DOWN): GameBuilder {
+    const deck = new Deck(name, mode, [], true);
     this.decks.push(deck);
     deck.setPosition(x, y);
     this.addRule(new RedBlackDescendingRule([name]));
@@ -88,6 +88,12 @@ class GameBuilder {
 
   public addRule(rule: Rule): GameBuilder {
     this.rules.push(rule);
+    return this;
+  }
+
+  public addPlayerRule(playerName: string, rule: Rule): GameBuilder {
+    this.rules.push(rule);
+    rule.setAffectedPlayers([playerName]);
     return this;
   }
 

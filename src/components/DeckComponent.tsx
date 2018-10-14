@@ -7,7 +7,7 @@ import CardComponent from './CardComponent';
 
 const VERTICAL_SPREAD = 35;
 
-const HORIZONTAL_SPREAD = 20;
+const HORIZONTAL_SPREAD = 30;
 
 export interface IDeckProps {
   deck: Deck;

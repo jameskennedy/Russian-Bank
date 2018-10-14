@@ -42,8 +42,8 @@ export class GameBoard extends React.Component<IGameBoardProps, IGameBoardState>
       const startDrag = (dragInProgress: MoveInProgress) => this.setState({ dragInProgress });
       const endDrag = (targetDeck: Deck) => this.executeMoveAction(targetDeck, this.state.dragInProgress);
       const childDeckOffset = Math.min(10, deck.getCards().length);
-      const left = deck.getPositionX() * 150 + 20;
-      const top = deck.getPositionY() * 200 + 20;
+      const left = this.getDeckCoordinateX(deck.getPositionX());
+      const top = this.getDeckCoordinateY(deck.getPositionY());
       return (
         <DeckComponent key={index++} deck={deck} childDeck={childDeck} left={left} top={top}
           legalActions={this.getLegalActionsForDeck(deck)}
@@ -134,7 +134,7 @@ export class GameBoard extends React.Component<IGameBoardProps, IGameBoardState>
   }
 
   private getDeckCoordinateY(position: number): number {
-    return position * 200 + 20;
+    return position * 160 + 20;
   }
 }
 

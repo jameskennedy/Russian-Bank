@@ -14,6 +14,10 @@ class TapDeck extends Action {
     return this.tapAction.isLegal(gameState);
   }
 
+  public getTapAction(): Action {
+    return this.tapAction;
+  }
+
   public toString() {
     return `Tap ${this.getSourceDeckName()} to ${this.tapAction}`;
   }

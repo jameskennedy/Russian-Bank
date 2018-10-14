@@ -1,16 +1,20 @@
 import FlipDeck from './actions/FlipDeck';
 import Move from './actions/Move';
 import TapDeck from './actions/TapDeck';
+import EndTurnOnDiscardEvent from './events/EndTurnOnDiscardEvent';
 import NoCardsLeftCondition from './events/NoCardsLeftCondition';
 import SingleActionTurnEvent from './events/SingleActionTurnEvent';
 import GameService from './GameService';
 import GameBuilder from './internal/GameBuilder';
+import { DeckMode } from './objects/Deck';
 import Game from './objects/Game';
 import GameParameters from './objects/GameParameters';
 import AI from './players/AI';
 import AllowedCardsRule from './rules/common/AllowedCardsRule';
 import LimitMoveSourceRule from './rules/common/LimitMoveSourceRule';
 import LimitMoveTargetRule from './rules/common/LimitMoveTargetRule';
+import OnlyOwnerCanUseRule from './rules/common/OnlyOwnerCanUseRule';
+import SameSuitAdjacentRankRule from './rules/common/SameSuitAdjacentRankRule';
 import SameSuitIncreasingRankRule from './rules/common/SameSuitIncreasingRankRule';
 
 class GameFactory {
@@ -60,6 +64,70 @@ class GameFactory {
     const game = builder.create(this.newUniqueGameId());
 
 
+
+    this.activeGames.push(game);
+    return new GameService(game);
+  }
+
+  public startRussionBankGame(gameParameters: GameParameters) {
+    const builder = new GameBuilder();
+    const foundationNames = [];
+    for (let foundation = 1; foundation <= 8; foundation++) {
+      const name = `Foundation${foundation}`;
+      foundationNames.push(name);
+      builder.addDiscardDeck(name, (foundation - 1) % 2 + 3, Math.floor((foundation - 1) / 2) + 1);
+    }
+    builder
+      .addRule(new LimitMoveTargetRule(foundationNames, []))
+      .addRule(new SameSuitIncreasingRankRule(foundationNames))
+    for (let player = 1; player <= 2; player++) {
+      const row = player === 1 ? 0 : 5;
+      const otherPlayer = player % 2 + 1;
+      const isAI = gameParameters.numberOfPlayers < 2 && player === 2;
+      const playerName = 'Player ' + player;
+      builder
+        .addStandardCardDeck(`Stock${player}`, 3, row)
+        .addTopCardDeck(`Stock${player}:top`, `Stock${player}`)
+        .addDiscardDeck(`Waste${player}`, 4, row)
+        .addDiscardDeck(`Reserve${player}`, 6, row)
+        .addRule(new LimitMoveSourceRule([`Stock${player}`], [`Stock${player}:top`]))
+        .addRule(new OnlyOwnerCanUseRule([`Stock${player}`, `Stock${player}:top`, `Waste${player}`, `Reserve${player}`]))
+        .addPlayerRule(playerName, new LimitMoveSourceRule([], [`Reserve${player}`]))
+        .addPlayerRule(playerName, new LimitMoveSourceRule([`Stock${player}:top`], [`Waste${player}`]))
+        .addPlayerRule(`Player ${otherPlayer}`, new SameSuitAdjacentRankRule([`Waste${player}`, `Reserve${player}`]))
+        .addAction(new TapDeck(`Stock${player}:top`, new Move(`Stock${player}:top`, `Waste${player}`, 'top')))
+        .addAction(new FlipDeck(`Waste${player}`, `Stock${player}`));
+
+      builder.addPlayer(playerName, isAI ? new AI() : undefined)
+        .assignDeck(`Stock${player}`, playerName)
+        .assignDeck(`Stock${player}:top`, playerName)
+        .assignDeck(`Waste${player}`, playerName)
+        .assignDeck(`Reserve${player}`, playerName)
+    }
+
+    for (let i = 1; i <= 8; i++) {
+      const onLeft = i <= 4;
+      builder.addRedBlackDescendingDeck('House' + i, onLeft ? 2 : 5, i % 4 + 1, onLeft ? DeckMode.SPREAD_LEFT : DeckMode.SPREAD_RIGHT);
+    }
+    builder.dealCards((gameState) => {
+      for (let player = 1; player <= 2; player++) {
+        const mainDeck = gameState.getDeck(`Stock${player}`);
+        const reserveDeck = gameState.getDeck(`Reserve${player}`);
+        for (let i = 1; i <= 4; i++) {
+          const houseIndex = i + (player === 1 ? 0 : 4);
+          const houseDeck = gameState.getDeck('House' + houseIndex);
+          houseDeck.pushCard(mainDeck.popCard()!);
+        }
+        for (let i = 1; i <= 13; i++) {
+          reserveDeck.pushCard(mainDeck.popCard()!);
+        }
+      }
+    })
+
+    builder.addEvent(new EndTurnOnDiscardEvent('Waste1'));
+    builder.addEvent(new EndTurnOnDiscardEvent('Waste2'));
+    builder.addEvent(new NoCardsLeftCondition())
+    const game = builder.create(this.newUniqueGameId());
 
     this.activeGames.push(game);
     return new GameService(game);

@@ -59,9 +59,9 @@ class GameService {
     newState.setPreviousAction(action);
     newState.setActionInProgress(undefined);
 
-    this.triggerBeforeActionEvents(newState);
+    this.triggerBeforeActionEvents(newState, action);
     action.execute(newState);
-    this.triggerAfterActionEvents(newState);
+    this.triggerAfterActionEvents(newState, action);
     this.game.advanceState(newState);
 
     if (newState.getStatus() === GameStatus.IN_PLAY) {
@@ -75,12 +75,12 @@ class GameService {
     return [...this.game.getPlayers()];
   }
 
-  private triggerBeforeActionEvents(gameState: GameState) {
-    this.game.getEvents().forEach(e => e.beforeAction(gameState));
+  private triggerBeforeActionEvents(gameState: GameState, action: Action) {
+    this.game.getEvents().forEach(e => e.beforeAction(gameState, action));
   }
 
-  private triggerAfterActionEvents(gameState: GameState) {
-    this.game.getEvents().forEach(e => e.afterAction(gameState));
+  private triggerAfterActionEvents(gameState: GameState, action: Action) {
+    this.game.getEvents().forEach(e => e.afterAction(gameState, action));
   }
 
   private startAIPlayerAction(gameState: GameState) {

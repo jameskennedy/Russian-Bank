@@ -16,8 +16,8 @@ class RussianBank extends React.PureComponent<IRussianBankProps> {
     return (
       <div>
         <div>
-          <button onClick={this.props.newSolitaire1Player}>Solitaire 1 player</button>
-          <button onClick={this.props.newSolitaire2Player}>Solitaire 2 player</button>
+          <button onClick={this.props.newSolitaire1Player}>1 player</button>
+          <button onClick={this.props.newSolitaire2Player}>2 player</button>
           <AIConsoleContainer />
         </div>
         <GameBoardContainer />

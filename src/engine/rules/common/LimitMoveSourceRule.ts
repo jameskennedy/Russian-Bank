@@ -9,7 +9,10 @@ class LimitMoveSourceRule extends MoveActionRule {
   }
 
   protected isMoveLegal(move: Move, sourceDeck: Deck, targetDeck: Deck, gameState: GameState): boolean {
-    return this.isSourceDeckInWhiteList(move.getSourceDeckName());
+    if (!this.isCurrentPlayerAffected(gameState)) {
+      return true;
+    }
+    return this.isCurrentPlayerAffected(gameState) && this.isSourceDeckInWhiteList(move.getSourceDeckName());
   }
 
   private isSourceDeckInWhiteList(sourceDeckName: string): boolean {
