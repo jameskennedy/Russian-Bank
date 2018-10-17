@@ -13,6 +13,7 @@ import AI from './players/AI';
 import AllowedCardsRule from './rules/common/AllowedCardsRule';
 import LimitMoveSourceRule from './rules/common/LimitMoveSourceRule';
 import LimitMoveTargetRule from './rules/common/LimitMoveTargetRule';
+import MustMoveFromDeckIfPossibleRule from './rules/common/MustMoveFromDeckIfPossibleRule';
 import OnlyOwnerCanUseRule from './rules/common/OnlyOwnerCanUseRule';
 import SameSuitAdjacentRankRule from './rules/common/SameSuitAdjacentRankRule';
 import SameSuitIncreasingRankRule from './rules/common/SameSuitIncreasingRankRule';
@@ -94,6 +95,7 @@ class GameFactory {
         .addRule(new OnlyOwnerCanUseRule([`Stock${player}`, `Stock${player}:top`, `Waste${player}`, `Reserve${player}`]))
         .addPlayerRule(playerName, new LimitMoveSourceRule([], [`Reserve${player}`]))
         .addPlayerRule(playerName, new LimitMoveSourceRule([`Stock${player}:top`], [`Waste${player}`]))
+        .addPlayerRule(playerName, new MustMoveFromDeckIfPossibleRule([`Stock${player}:top`]))
         .addPlayerRule(`Player ${otherPlayer}`, new SameSuitAdjacentRankRule([`Waste${player}`, `Reserve${player}`]))
         .addAction(new TapDeck(`Stock${player}:top`, new Move(`Stock${player}:top`, `Waste${player}`, 'top')))
         .addAction(new FlipDeck(`Waste${player}`, `Stock${player}`));

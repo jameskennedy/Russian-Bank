@@ -1,5 +1,6 @@
-import Action from '../../actions/Action';
+import Action, { ActionType } from '../../actions/Action';
 import Move from '../../actions/Move';
+import TapDeck from '../../actions/TapDeck';
 import { ActionPlayability } from '../../internal/RuleEngine';
 import Deck from '../../objects/Deck';
 import GameState from '../../objects/GameState';
@@ -10,7 +11,11 @@ class MoveActionRule extends Rule {
     super(affectedDecks)
   }
 
-  public isLegal(action: Action, gameState: GameState): ActionPlayability {
+  public isLegal(inAction: Action, gameState: GameState): ActionPlayability {
+    let action = inAction;
+    if (action.getType() === ActionType.TAP) {
+      action = (action as TapDeck).getTapAction();
+    }
     if (action instanceof Move) {
       const move = action as Move;
       const sourceDeck = move.getSourceDeck(gameState);

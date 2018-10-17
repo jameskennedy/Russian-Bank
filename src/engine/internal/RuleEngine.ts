@@ -34,7 +34,11 @@ class RuleEngine {
     }
     const rules: Rule[] = this.game.getRules();
     const illegalMove = rules.find(r => r.isLegal(action, gameState) === ActionPlayability.ILLEGAL);
-    return illegalMove ? ActionPlayability.ILLEGAL : ActionPlayability.LEGAL;
+    if (illegalMove) {
+      return ActionPlayability.ILLEGAL;
+    }
+    const exclusiveMove = rules.find(r => r.isLegal(action, gameState) === ActionPlayability.EXCLUSIVE);
+    return exclusiveMove ? ActionPlayability.EXCLUSIVE : ActionPlayability.LEGAL;
   }
 }
 
