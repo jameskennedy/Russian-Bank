@@ -1,4 +1,5 @@
 import Action from '../actions/Action';
+import { ActionPlayability } from '../internal/RuleEngine';
 import Deck from '../objects/Deck';
 import GameState from '../objects/GameState';
 
@@ -8,8 +9,8 @@ class Rule {
 
   }
 
-  public isLegal(action: Action, gameState: GameState): boolean {
-    return false;
+  public isLegal(action: Action, gameState: GameState): ActionPlayability {
+    return ActionPlayability.ILLEGAL;
   }
 
   public setAffectedPlayers(players: string[]) {

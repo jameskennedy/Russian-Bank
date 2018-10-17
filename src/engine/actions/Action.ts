@@ -8,6 +8,7 @@ export enum ActionType {
 }
 
 export class Action {
+
   constructor(protected type: ActionType, private sourceDeckName: string, private sourceCardName?: string) {
   }
 

@@ -1,5 +1,6 @@
 import Action from '../../actions/Action';
 import Move from '../../actions/Move';
+import RuleEngine, { ActionPlayability } from '../../internal/RuleEngine';
 import Card from '../../objects/Card';
 import Deck from '../../objects/Deck';
 import GameState from '../../objects/GameState';
@@ -10,14 +11,14 @@ class MaxDeckSize extends Rule {
     super(affectedDecks)
   }
 
-  public isLegal(action: Action, gameState: GameState): boolean {
+  public isLegal(action: Action, gameState: GameState): ActionPlayability {
     if (action instanceof Move) {
       const move = action as Move;
       const sourceCards = move.getCardsToMove(gameState);
       const targetDeck = move.getTargetDeck(gameState);
-      return !this.isAffectedDeck(targetDeck) || this.isBelowMaxSize(targetDeck, sourceCards);
+      return RuleEngine.legalIf(!this.isAffectedDeck(targetDeck) || this.isBelowMaxSize(targetDeck, sourceCards));
     }
-    return true;
+    return ActionPlayability.LEGAL;
   }
 
   private isBelowMaxSize(deck: Deck, sourceCards: Card[]): boolean {

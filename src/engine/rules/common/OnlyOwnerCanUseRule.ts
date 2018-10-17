@@ -1,4 +1,5 @@
 import Action from '../../actions/Action';
+import RuleEngine, { ActionPlayability } from '../../internal/RuleEngine';
 import GameState from '../../objects/GameState';
 import Rule from '../Rule';
 
@@ -7,12 +8,12 @@ class OnlyOwnerCanUseRule extends Rule {
     super(affectedDecks);
   }
 
-  public isLegal(action: Action, gameState: GameState): boolean {
+  public isLegal(action: Action, gameState: GameState): ActionPlayability {
     const sourceDeck = gameState.getDeck(action.getSourceDeckName());
     if (this.isAffectedDeck(sourceDeck)) {
-      return sourceDeck.getOwner().getName() === gameState.getPlayerTurn().getName();
+      return RuleEngine.legalIf(sourceDeck.getOwner().getName() === gameState.getPlayerTurn().getName());
     }
-    return true;
+    return ActionPlayability.LEGAL;
   }
 
 }

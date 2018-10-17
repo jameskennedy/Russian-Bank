@@ -2,7 +2,7 @@ import Action from './actions/Action';
 import FlipTopCard from './actions/FlipTopCard';
 import Move from './actions/Move';
 import TapDeck from './actions/TapDeck';
-import RuleEngine from './internal/RuleEngine';
+import RuleEngine, { ActionPlayability } from './internal/RuleEngine';
 import Deck, { DeckMode } from './objects/Deck';
 import Game from './objects/Game';
 import GameState, { GameStatus } from './objects/GameState';
@@ -25,23 +25,13 @@ class GameService {
     if (gameState.getStatus() !== GameStatus.IN_PLAY) {
       return [];
     }
-    const possibleActions: Action[] = this.game.getGameActions();
-    const decks: Deck[] = gameState.getDecks();
-    decks.forEach((sourceDeck) => {
-      if (sourceDeck.getMode() === DeckMode.FACE_DOWN) {
-        possibleActions.push(new FlipTopCard(sourceDeck.getName()));
-      } else {
-        decks.forEach((targetDeck) => {
-          if (sourceDeck !== targetDeck) {
-            sourceDeck.getMovableCards().forEach(card =>
-              possibleActions.push(new Move(sourceDeck.getName(), targetDeck.getName(), card.getName())));
-          }
-        })
-      }
-    });
-
-    const legalActions = possibleActions.filter(a => this.ruleEngine.isLegal(a, gameState));
-
+    const possibleActions = this.determinePossibleActions(gameState);
+    const actionPlayability: Map<ActionPlayability, Action[]> = this.ruleEngine.groupByLegality(possibleActions, gameState);
+    let legalActions = actionPlayability.get(ActionPlayability.LEGAL) || [];
+    const exclusiveActions = actionPlayability.get(ActionPlayability.EXCLUSIVE) || [];
+    if (exclusiveActions.length !== 0) {
+      legalActions = exclusiveActions;
+    }
     console.debug(`Legal legalActions: ${legalActions}`);
     return legalActions;
   }
@@ -51,8 +41,8 @@ class GameService {
   }
 
   public executeAction(action: Action) {
-    const isLegal = this.ruleEngine.isLegal(action, this.game.getCurrentGameState());
-    if (!isLegal) {
+    const legality = this.ruleEngine.isLegal(action, this.game.getCurrentGameState());
+    if (legality === ActionPlayability.ILLEGAL) {
       throw new Error(`Not a legal move: ${action}`);
     }
     const newState = this.getCopyOfCurrentGameState();
@@ -74,6 +64,24 @@ class GameService {
 
   public getPlayers() {
     return [...this.game.getPlayers()];
+  }
+
+  private determinePossibleActions(gameState: GameState): Action[] {
+    const possibleActions: Action[] = this.game.getGameActions();
+    const decks: Deck[] = gameState.getDecks();
+    decks.forEach((sourceDeck) => {
+      if (sourceDeck.getMode() === DeckMode.FACE_DOWN) {
+        possibleActions.push(new FlipTopCard(sourceDeck.getName()));
+      }
+      else {
+        decks.forEach((targetDeck) => {
+          if (sourceDeck !== targetDeck) {
+            sourceDeck.getMovableCards().forEach(card => possibleActions.push(new Move(sourceDeck.getName(), targetDeck.getName(), card.getName())));
+          }
+        });
+      }
+    });
+    return possibleActions;
   }
 
   private triggerBeforeActionEvents(gameState: GameState, action: Action) {

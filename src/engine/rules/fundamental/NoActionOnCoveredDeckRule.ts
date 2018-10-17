@@ -1,11 +1,14 @@
 import Action, { ActionType } from '../../actions/Action';
 import Move from '../../actions/Move';
+import RuleEngine, { ActionPlayability } from '../../internal/RuleEngine';
 import GameState from '../../objects/GameState';
 import Rule from '../Rule';
 
 class NoActionOnCoveredDeck extends Rule {
-  public isLegal(action: Action, gameState: GameState): boolean {
-    return this.canCoveredDeckBeSource(gameState, action) && this.canCoveredDeckBeTarget(gameState, action);
+  public isLegal(action: Action, gameState: GameState): ActionPlayability {
+    return RuleEngine.legalIf(
+      this.canCoveredDeckBeSource(gameState, action) &&
+      this.canCoveredDeckBeTarget(gameState, action));
   }
 
   private canCoveredDeckBeSource(gameState: GameState, action: Action): boolean {

@@ -1,4 +1,5 @@
 import Move from '../../actions/Move';
+import RuleEngine, { ActionPlayability } from '../../internal/RuleEngine';
 import Deck from '../../objects/Deck';
 import GameState from '../../objects/GameState';
 import MoveActionRule from './MoveActionRule';
@@ -8,11 +9,11 @@ class LimitMoveTargetRule extends MoveActionRule {
     super()
   }
 
-  protected isMoveLegal(move: Move, sourceDeck: Deck, targetDeck: Deck, gameState: GameState): boolean {
+  protected isMoveLegal(move: Move, sourceDeck: Deck, targetDeck: Deck, gameState: GameState): ActionPlayability {
     if (!this.sourceDecks.find(s => sourceDeck.getName() === s)) {
-      return true;
+      return ActionPlayability.LEGAL;
     }
-    return this.isTargetDeckInWhiteList(move.getTargetDeckName());
+    return RuleEngine.legalIf(this.isTargetDeckInWhiteList(move.getTargetDeckName()));
   }
 
   private isTargetDeckInWhiteList(targetDeckName: string): boolean {

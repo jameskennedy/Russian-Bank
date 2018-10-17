@@ -1,5 +1,6 @@
 import Action from '../../actions/Action';
 import Move from '../../actions/Move';
+import RuleEngine, { ActionPlayability } from '../../internal/RuleEngine';
 import Card from '../../objects/Card';
 import Deck from '../../objects/Deck';
 import GameState from '../../objects/GameState';
@@ -10,17 +11,17 @@ class AllowedCardsRule extends Rule {
     super()
   }
 
-  public isLegal(action: Action, gameState: GameState): boolean {
+  public isLegal(action: Action, gameState: GameState): ActionPlayability {
     if (action instanceof Move) {
       const move = action as Move;
       const sourceDeck = move.getSourceDeck(gameState);
       const targetDeck = move.getTargetDeck(gameState);
       if (targetDeck.getName() === this.targetDeck && targetDeck.getStackedOnDeck() !== sourceDeck) {
         const sourceCards = move.getCardsToMove(gameState);
-        return sourceCards.length > 0 && this.cardFilter(sourceCards[0], targetDeck);
+        return RuleEngine.legalIf(sourceCards.length > 0 && this.cardFilter(sourceCards[0], targetDeck));
       }
     }
-    return true;
+    return ActionPlayability.LEGAL;
   }
 }
 
