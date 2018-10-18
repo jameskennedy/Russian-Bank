@@ -5,6 +5,9 @@ import Rule from '../Rule';
 
 class CannotMoveIfNotFaceUp extends Rule {
   public isLegal(action: Action, gameState: GameState): ActionPlayability {
+    if (!action.getSourceDeckName()) {
+      return ActionPlayability.LEGAL;
+    }
     const sourceDeck = gameState.getDeck(action.getSourceDeckName());
     return RuleEngine.legalIf(action.getType() !== ActionType.MOVE || sourceDeck.isFaceUp());
   }

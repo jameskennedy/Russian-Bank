@@ -4,6 +4,7 @@ export enum ActionType {
   MOVE = 'Move',
   FLIP = 'Flip',
   TAP = 'Tap',
+  SKIP = 'Skip',
   GAME_START = 'Start of game'
 }
 

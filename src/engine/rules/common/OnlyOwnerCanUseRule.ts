@@ -9,6 +9,9 @@ class OnlyOwnerCanUseRule extends Rule {
   }
 
   public isLegal(action: Action, gameState: GameState): ActionPlayability {
+    if (!action.getSourceDeckName()) {
+      return ActionPlayability.LEGAL;
+    }
     const sourceDeck = gameState.getDeck(action.getSourceDeckName());
     if (this.isAffectedDeck(sourceDeck)) {
       return RuleEngine.legalIf(sourceDeck.getOwner().getName() === gameState.getPlayerTurn().getName());

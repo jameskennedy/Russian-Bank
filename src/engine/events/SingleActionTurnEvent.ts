@@ -9,10 +9,7 @@ class SingleActionTurnEvent implements IGameEvent {
 
   public afterAction(gameState: GameState): void {
     const service = GameFactory.getGameService(gameState.gameId);
-    const players = service.getPlayers();
-    const index = players.findIndex(p => p === gameState.getPlayerTurn());
-    const nextPlayer = players[(index + 1) % players.length];
-    gameState.setPlayerTurn(nextPlayer);
+    service.endTurn(gameState);
   }
 
 }

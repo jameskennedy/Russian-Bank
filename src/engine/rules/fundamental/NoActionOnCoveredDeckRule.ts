@@ -6,6 +6,9 @@ import Rule from '../Rule';
 
 class NoActionOnCoveredDeck extends Rule {
   public isLegal(action: Action, gameState: GameState): ActionPlayability {
+    if (!action.getSourceDeckName()) {
+      return ActionPlayability.LEGAL;
+    }
     return RuleEngine.legalIf(
       this.canCoveredDeckBeSource(gameState, action) &&
       this.canCoveredDeckBeTarget(gameState, action));

@@ -62,10 +62,23 @@ export class GameBoard extends React.Component<IGameBoardProps, IGameBoardState>
 
     return (
       <div className={`game-board ${gameState.getStatus().toLowerCase()}`}>
+        {this.renderButtons()}
         {deckComponents}
         {this.props.moveInProgress && this.renderAnimatedDeck(gameState)}
         <span className="status-message">{gameState.getStatusMessage()}</span>
       </div>);
+  }
+
+  private renderButtons() {
+    if (!!this.props.legalActions.find(a => a.getType() === ActionType.SKIP)) {
+      const onClick = () => this.executeSkipTurnAction();
+      return (
+        <div className="player-controls">
+          <button onClick={onClick}>Skip</button>
+        </div>
+      )
+    }
+    return undefined;
   }
 
   private executeMoveAction(targetDeck: Deck, moveInProgress?: MoveInProgress) {
@@ -85,6 +98,13 @@ export class GameBoard extends React.Component<IGameBoardProps, IGameBoardState>
     const action = this.props.legalActions
       .filter(a => (a.getType() === ActionType.TAP || a.getType() === ActionType.FLIP))
       .find(a => a.getSourceDeckName() === targetDeck.getName());
+    if (action) {
+      this.props.executeAction(action);
+    }
+  }
+
+  private executeSkipTurnAction() {
+    const action = this.props.legalActions.find(a => a.getType() === ActionType.SKIP);
     if (action) {
       this.props.executeAction(action);
     }

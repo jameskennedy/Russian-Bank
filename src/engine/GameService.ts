@@ -1,6 +1,7 @@
 import Action from './actions/Action';
 import FlipTopCard from './actions/FlipTopCard';
 import Move from './actions/Move';
+import SkipTurn from './actions/SkipTurn';
 import TapDeck from './actions/TapDeck';
 import RuleEngine, { ActionPlayability } from './internal/RuleEngine';
 import Deck, { DeckMode } from './objects/Deck';
@@ -40,7 +41,7 @@ class GameService {
     return this.getLegalActions().filter(a => a.getSourceDeckName() === deck.getName());
   }
 
-  public executeAction(action: Action) {
+  public executeAction(action: Action): GameState {
     const legality = this.ruleEngine.isLegal(action, this.game.getCurrentGameState());
     if (legality === ActionPlayability.ILLEGAL) {
       throw new Error(`Not a legal move: ${action}`);
@@ -57,9 +58,20 @@ class GameService {
 
     if (newState.getStatus() === GameStatus.IN_PLAY) {
       this.startAIPlayerAction(newState);
+      if (newState.getActionInProgress() instanceof SkipTurn) {
+        return this.executeAction(newState.getActionInProgress()!);
+      }
     }
 
     return this.game.getCurrentGameState();
+  }
+
+  public endTurn(gameState: GameState) {
+    const players = this.getPlayers();
+    const index = players.findIndex(p => p === gameState.getPlayerTurn());
+    const nextPlayer = players[(index + 1) % players.length];
+    gameState.setPlayerTurn(nextPlayer);
+    gameState.setStatusMessage(`${nextPlayer.getName()} go!`);
   }
 
   public getPlayers() {

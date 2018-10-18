@@ -19,7 +19,8 @@ class EndTurnOnDiscardEvent implements IGameEvent {
       const targetDeck = move.getTargetDeck(gameState);
       if (targetDeck.getName() === this.discardDeckName &&
         targetDeck.getOwner() === gameState.getPlayerTurn()) {
-        this.endTurn(gameState);
+        const service = GameFactory.getGameService(gameState.gameId);
+        service.endTurn(gameState);
       }
     }
     if (action instanceof TapDeck) {
@@ -27,16 +28,6 @@ class EndTurnOnDiscardEvent implements IGameEvent {
       this.afterAction(gameState, tap.getTapAction());
     }
   }
-
-  private endTurn(gameState: GameState) {
-    const service = GameFactory.getGameService(gameState.gameId);
-    const players = service.getPlayers();
-    const index = players.findIndex(p => p === gameState.getPlayerTurn());
-    const nextPlayer = players[(index + 1) % players.length];
-    gameState.setPlayerTurn(nextPlayer);
-    gameState.setStatusMessage(`${nextPlayer.getName()} go!`);
-  }
-
 }
 
 export default EndTurnOnDiscardEvent;

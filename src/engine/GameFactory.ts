@@ -1,5 +1,6 @@
 import FlipDeck from './actions/FlipDeck';
 import Move from './actions/Move';
+import SkipTurn from './actions/SkipTurn';
 import TapDeck from './actions/TapDeck';
 import EndTurnOnDiscardEvent from './events/EndTurnOnDiscardEvent';
 import NoCardsLeftCondition from './events/NoCardsLeftCondition';
@@ -17,6 +18,7 @@ import MustMoveFromDeckIfPossibleRule from './rules/common/MustMoveFromDeckIfPos
 import OnlyOwnerCanUseRule from './rules/common/OnlyOwnerCanUseRule';
 import SameSuitAdjacentRankRule from './rules/common/SameSuitAdjacentRankRule';
 import SameSuitIncreasingRankRule from './rules/common/SameSuitIncreasingRankRule';
+import CanOnlySkipTurnWhenStockEmpty from './rules/russianbank/CanOnlySkipTurnWhenStockEmpty';
 
 class GameFactory {
   private activeGames: Game[] = [];
@@ -81,6 +83,8 @@ class GameFactory {
     builder
       .addRule(new LimitMoveTargetRule(foundationNames, []))
       .addRule(new SameSuitIncreasingRankRule(foundationNames))
+      .addAction(new SkipTurn())
+      .addRule(new CanOnlySkipTurnWhenStockEmpty());
     for (let player = 1; player <= 2; player++) {
       const row = player === 1 ? 0 : 5;
       const otherPlayer = player % 2 + 1;
