@@ -1,3 +1,5 @@
+
+import Player from '../../players/Player';
 import Card from '../Card';
 import CardSuit from '../CardSuit';
 import Deck, { DeckMode } from '../Deck';
@@ -51,5 +53,24 @@ describe('Deck', () => {
     const poppedCard = deck.popCard();
 
     expect(poppedCard).toBeUndefined();
+  });
+
+  test('can be copied, preserving non-card object references', () => {
+    const card = new Card(1, CardSuit.HEARTS, true);
+    const deck = new Deck('discard', DeckMode.FACE_DOWN, [card], true);
+    const stackedOnDeck = new Deck('stack', DeckMode.FACE_DOWN, [], true);
+    const owner = new Player('player');
+    deck.setStackedOnDeck(stackedOnDeck);
+    deck.setOwner(owner);
+
+    const copy = deck.createCopy();
+
+    expect(copy.getName()).toEqual('discard');
+    expect(copy.getMode()).toEqual(DeckMode.FACE_DOWN);
+    expect(copy.isAcceptingNewCards()).toEqual(true);
+    expect(copy.getCards()[0]).toEqual(card);
+    expect(copy.getCards()[0]).not.toBe(card);
+    expect(copy.getOwner()).toBe(owner);
+    expect(copy.getStackedOnDeck()).toBe(stackedOnDeck);
   });
 });

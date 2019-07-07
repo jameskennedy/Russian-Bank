@@ -1,3 +1,5 @@
+
+import * as lodash from 'lodash';
 import Player from '../players/Player';
 import Card from './Card';
 
@@ -16,7 +18,12 @@ export class Deck {
   private positionY: number;
   private owner: Player;
 
-  constructor(private name: string, private mode: DeckMode, private cards: Card[], private acceptsNewCards?: boolean) {
+  constructor(
+    private name: string,
+    private mode: DeckMode,
+    private cards: Card[],
+    private acceptsNewCards?: boolean
+  ) {
     this.setDeckMode(mode);
   }
 
@@ -37,7 +44,9 @@ export class Deck {
   }
 
   public getCard(cardName?: string): Card | undefined {
-    return cardName ? this.getCards().find(c => c.getName() === cardName) : undefined;
+    return cardName
+      ? this.getCards().find(c => c.getName() === cardName)
+      : undefined;
   }
 
   public getMovableCards(): Card[] {
@@ -46,7 +55,6 @@ export class Deck {
     }
     return [this.getTopCard()];
   }
-
 
   public getCardsToMoveWith(sourceCard: Card): Card[] {
     if (this.isSpreadDeck()) {
@@ -91,7 +99,7 @@ export class Deck {
 
   public pushCard(card: Card) {
     this.cards.push(card);
-    card.setFaceUp(this.isFaceUp())
+    card.setFaceUp(this.isFaceUp());
   }
 
   public popCard() {
@@ -112,14 +120,16 @@ export class Deck {
 
   public setStackedOnDeck(stackedOnDeck: Deck) {
     this.stackedOnDeck = stackedOnDeck;
-    this.setPosition(stackedOnDeck.getPositionX(), stackedOnDeck.getPositionY());
+    this.setPosition(
+      stackedOnDeck.getPositionX(),
+      stackedOnDeck.getPositionY()
+    );
   }
 
   public createCopy() {
-    const deck = new Deck(this.name, this.mode, this.cards.map(c => c.createCopy()), this.acceptsNewCards);
-    deck.setPosition(this.getPositionX(), this.getPositionY());
-    deck.setOwner(this.getOwner());
-    return deck;
+    const copy = lodash.clone(this);
+    copy.cards = this.cards.map(c => c.createCopy());
+    return copy;
   }
 
   public setPosition(x: number, y: number) {
@@ -140,7 +150,11 @@ export class Deck {
   }
 
   private isSpreadDeck(): boolean {
-    return this.mode === DeckMode.SPREAD_DOWN || this.mode === DeckMode.SPREAD_LEFT || this.mode === DeckMode.SPREAD_RIGHT;
+    return (
+      this.mode === DeckMode.SPREAD_DOWN ||
+      this.mode === DeckMode.SPREAD_LEFT ||
+      this.mode === DeckMode.SPREAD_RIGHT
+    );
   }
 }
 

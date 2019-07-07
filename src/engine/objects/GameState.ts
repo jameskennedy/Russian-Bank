@@ -1,3 +1,4 @@
+import * as lodash from 'lodash';
 import Action from "../actions/Action";
 import Player from "../players/Player";
 import Deck from "./Deck";
@@ -87,12 +88,10 @@ class GameState {
 
     const decks = Array.from(oldNewMap.values());
     this.copyDeckReferences(oldNewMap);
-    const newState = new GameState(this.gameId, id, this.previousAction, decks);
-    newState.setPlayerTurn(this.getPlayerTurn());
-    newState.setActionInProgress(this.getActionInProgress());
-    newState.previousAction = this.previousAction;
-    newState.status = this.status;
-    newState.statusMessage = this.statusMessage;
+
+    const newState = lodash.clone(this);
+    newState.id = id;
+    newState.decks = decks;
     return newState;
   }
 

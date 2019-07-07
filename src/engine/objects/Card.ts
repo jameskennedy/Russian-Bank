@@ -10,7 +10,7 @@ const RANK_MAP = {
 };
 
 class Card {
-  constructor(private rank: number, private suit: CardSuit, private faceUp: boolean = false) {
+  constructor(readonly rank: number, readonly suit: CardSuit, private faceUp: boolean = false) {
     if (rank < 1 || rank > 13) {
       throw new Error(`Invalid card value ${rank}`);
     }
