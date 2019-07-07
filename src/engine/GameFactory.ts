@@ -10,7 +10,8 @@ import GameBuilder from './internal/GameBuilder';
 import { DeckMode } from './objects/Deck';
 import Game from './objects/Game';
 import GameParameters from './objects/GameParameters';
-import AI from './players/AI';
+import RandomActionAI from './players/RandomAI';
+import RussianBankAI from './players/RussianBankAI';
 import AllowedCardsRule from './rules/common/AllowedCardsRule';
 import LimitMoveSourceRule from './rules/common/LimitMoveSourceRule';
 import LimitMoveTargetRule from './rules/common/LimitMoveTargetRule';
@@ -60,7 +61,7 @@ class GameFactory {
       .assignDeck('Stock:top', 'Player 1')
       .assignDeck('Waste', 'Player 1')
     if (gameParameters.numberOfPlayers > 1) {
-      builder.addPlayer('Player 2', new AI());
+      builder.addPlayer('Player 2', new RandomActionAI());
     }
     builder.addEvent(new SingleActionTurnEvent());
     builder.addEvent(new NoCardsLeftCondition())
@@ -104,7 +105,7 @@ class GameFactory {
         .addAction(new TapDeck(`Stock${player}:top`, new Move(`Stock${player}:top`, `Waste${player}`, 'top')))
         .addAction(new FlipDeck(`Waste${player}`, `Stock${player}`));
 
-      builder.addPlayer(playerName, isAI ? new AI() : undefined)
+      builder.addPlayer(playerName, isAI ? new RussianBankAI() : undefined)
         .assignDeck(`Stock${player}`, playerName)
         .assignDeck(`Stock${player}:top`, playerName)
         .assignDeck(`Waste${player}`, playerName)
